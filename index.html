@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		
+		<style>
+			* {
+				font-family:sans-serif;
+				box-sizing:border-box;
+			}
+			
+			#main-div {
+				width:calc(100vw - 10px);
+				height:calc(100vh - 60px);
+				margin:0;
+			}
+			
+			#input-div>label {
+				text-align:center;
+				display:block;
+				font-size:16px;
+				font-weight:bold;
+			}
+			
+			#main-div>div {
+				float:left;
+			}
+			
+			#input-div {
+				width:100%;
+				height:60px;
+				padding:5px 15px 0 10px;
+			}
+			
+			#in-txt {
+				width:100%;
+				height:20px;
+				text-align:center;
+			}
+			
+			#options-div {			
+				width:30%;
+				height:calc(100% - 60px);
+				overflow:auto;
+				padding:0;
+			}
+			
+			input[type="radio"] {
+				margin: 7px 0 7px 0;
+			}
+			
+			.squareBtn {
+				height:23px;
+				width:23px;
+				font-size:14px;
+				padding:0;
+			}
+			
+			#output-div {
+				width:70%;
+				height:calc(100% - 60px);
+				padding:10px;
+			}
+			
+			textarea {
+				width:100%;
+				height:100%;
+				resize:none;
+			}
+			
+			#buttons-div>input {
+				font-size:16px;
+				width:80px;
+				margin:10px 5px 0 5px;
+			}
+		</style>
+	</head>
+	
+	<body>
+		<div id="main-div">
+			<div id="input-div">
+				<label for="in-txt">Coordinates:</label>
+				<input type="text" id="in-txt"/>
+			</div>
+			
+			<div id="options-div">
+				<fieldset>
+					<legend>Dimensions</legend>
+					
+					<input type="number" min="1" max="100" value="4" id="dimensions-nud"/>		
+					
+					<input type="button" style="float:right;" id="project-btn"/>
+				</fieldset>
+				
+				<fieldset>
+					<legend>Variables</legend>
+					
+					⚬ Constants&nbsp;&nbsp;
+					
+					<input type="button" class="squareBtn" value="+" id="plusconst-btn" />					
+					<input type="button" class="squareBtn" value="×" id="minusconst-btn"/>					
+				</fieldset>
+				
+				<fieldset>
+					<legend>Formatting</legend>		
+					
+					<input name="formatting" type="radio" id="spaces-rad" checked />
+					<label for="spaces-rad">Separate by spaces</label><br/>
+					
+					<input name="formatting" type="radio" id="commas-rad"/>
+					<label for="commas-rad">Separate by commas</label><br/>				
+				</fieldset>			
+				
+				<fieldset>
+					<legend>Sign changes</legend>	
+					
+					<form name="signFrm">
+						<input name="signs" type="radio" id="nosigns-rad" checked />
+						<label for="nosigns-rad">No sign changes</label><br/>
+						
+						<input name="signs" type="radio" id="allsigns-rad"/>
+						<label for="allsigns-rad">All sign changes</label><br/>
+						
+						<input name="signs" type="radio" id="evensigns-rad"/>
+						<label for="evensigns-rad">Even sign changes</label><br/>
+						
+						<input name="signs" type="radio" id="oddsigns-rad"/>
+						<label for="oddsigns-rad">Odd sign changes</label><br/>
+						
+						<input name="signs" type="radio" id="customsigns-rad"/>
+						<label for="customsigns-rad">Custom&nbsp;&nbsp;</label>	
+						
+						<input type="button" class="squareBtn" value="+" id="plussigns-btn"/>					
+						<input type="button" class="squareBtn" value="×" id="minussigns-btn"/>		
+					</form>		
+				</fieldset>
+				
+				<fieldset>
+					<legend>Permutations</legend>		
+					
+					<form name="permFrm">
+						<input name="perms" type="radio" id="noperms-rad" checked />
+						<label for="noperms-rad">No permutations</label><br/>
+						
+						<input name="perms" type="radio" id="allperms-rad"/>
+						<label for="allperms-rad">All permutations</label><br/>
+						
+						<input name="perms" type="radio" id="evenperms-rad"/>
+						<label for="evenperms-rad">Even permutations</label><br/>
+						
+						<input name="perms" type="radio" id="oddperms-rad"/>
+						<label for="oddperms-rad">Odd permutations</label><br/>
+						
+						<input name="perms" type="radio" id="customperms-rad"/>
+						<label for="customperms-rad">Custom&nbsp;&nbsp;</label>	
+						
+						<input type="button" class="squareBtn" value="+" id="plusperms-btn"/>					
+						<input type="button" class="squareBtn" value="×" id="minusperms-btn"/>	
+					</form>					
+				</fieldset>
+			</div>
+			
+			<div id="output-div">
+				<textarea id="out-txt" readonly></textarea>
+			</div>
+		</div>
+		
+		<div id="buttons-div">
+			<input type="button" id="clear-btn" value="Clear"/>			
+			<input type="button" id="insert-btn" style="float:right" value="Insert"/>
+			<input type="button" id="copy-btn" style="float:right" value="Copy"/>	
+			<input type="button" id="import-btn" style="float:right" value="Import"/>
+			<input type="button" id="export-btn" style="float:right" value="Export"/>
+		</div>
+		
+		<script>
+			const in_txt = document.getElementById('in-txt');
+			const out_txt = document.getElementById('out-txt');
+			const insert_btn = document.getElementById('insert-btn');
+			const clear_btn = document.getElementById('clear-btn');
+			const copy_btn = document.getElementById('copy-btn');
+			const dimensions_nud = document.getElementById('dimensions-nud');
+			const project_btn = document.getElementById('project-btn');
+		</script>
+		<script src="permutations.js"></script>
+		<script src="coordinatelist.js"></script>
+		<script src="events.js"></script>
+	</body>
+</html>
