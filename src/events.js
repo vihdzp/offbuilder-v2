@@ -24,6 +24,13 @@ dimensions_nud.addEventListener('input', event => {
 });
 project_btn.value = 'Project to ' + (dimensions_nud.value - 1) + 'D';
 
+code_txt.addEventListener('keydown', event => {
+	if(event.key === "Enter" && event.ctrlKey) {
+		eval(editor.getValue());
+		editor.setValue("");
+	}
+});
+
 document.forms.signFrm.signs.forEach((radio, i) => {
 	radio.checked = (i === 0);
 	radio.addEventListener('change', () => {

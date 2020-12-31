@@ -5,8 +5,12 @@
 		
 		<style>
 			* {
-				font-family:sans-serif;
 				box-sizing:border-box;
+				font-family:sans-serif;
+			}
+			
+			.ace_editor * {
+				font-family: monospace;
 			}
 			
 			#main-div {
@@ -15,10 +19,18 @@
 				margin:0;
 			}
 			
-			#input-div>label {
+			#coord-lbl {
 				text-align:center;
 				display:block;
 				font-size:16px;
+				font-weight:bold;
+			}
+			
+			.secondary-lbl {
+				height:20px;
+				text-align:center;
+				display:block;
+				font-size:14px;
 				font-weight:bold;
 			}
 			
@@ -56,16 +68,29 @@
 				padding:0;
 			}
 			
-			#output-div {
+			#textarea-div {
 				width:70%;
 				height:calc(100% - 60px);
 				padding:10px;
 			}
 			
-			textarea {
+			#output-div, #code-div {
 				width:100%;
-				height:100%;
-				resize:none;
+				height:50%;
+			}
+			
+			textarea {
+				position:relative;
+				width:100%;
+				height:calc(100% - 30px);
+				resize:none
+			}
+			
+			#code-txt {
+				position:relative;
+				width:100%;
+				height:calc(100% - 30px);
+				border:1px solid gray;
 			}
 			
 			#buttons-div>input {
@@ -79,7 +104,7 @@
 	<body>
 		<div id="main-div">
 			<div id="input-div">
-				<label for="in-txt">Coordinates:</label>
+				<label for="in-txt" id="coord-lbl">Coordinates:</label>
 				<input type="text" id="in-txt"/>
 			</div>
 			
@@ -160,8 +185,16 @@
 				</fieldset>
 			</div>
 			
-			<div id="output-div">
-				<textarea id="out-txt" readonly></textarea>
+			<div id="textarea-div">
+				<div id="output-div">
+					<label for="out-txt" class="secondary-lbl">Output</label>
+					<textarea id="out-txt" readonly></textarea>
+				</div>
+				
+				<div id="code-div">
+					<label for="code-txt" class="secondary-lbl">Code</label>
+					<div id="code-txt"></div>
+				</div>
 			</div>
 		</div>
 		
@@ -173,17 +206,25 @@
 			<input type="button" id="export-btn" style="float:right" value="Export"/>
 		</div>
 		
+		<script src="src/ace.js"></script>
+		<script src="src/mode-javascript.js"></script>
+		<script src="src/worker-javascript.js"></script>
 		<script>
 			const in_txt = document.getElementById('in-txt');
 			const out_txt = document.getElementById('out-txt');
 			const insert_btn = document.getElementById('insert-btn');
 			const clear_btn = document.getElementById('clear-btn');
 			const copy_btn = document.getElementById('copy-btn');
+			const code_txt = document.getElementById('code-txt');
 			const dimensions_nud = document.getElementById('dimensions-nud');
 			const project_btn = document.getElementById('project-btn');
+			
+			var editor = ace.edit("code-txt");
+			var JavaScriptMode = ace.require("ace/mode/javascript").Mode;
+			editor.session.setMode(new JavaScriptMode());
 		</script>
-		<script src="permutations.js"></script>
-		<script src="coordinatelist.js"></script>
-		<script src="events.js"></script>
+		<script src="src/permutations.js"></script>
+		<script src="src/coordinatelist.js"></script>
+		<script src="src/events.js"></script>
 	</body>
 </html>
