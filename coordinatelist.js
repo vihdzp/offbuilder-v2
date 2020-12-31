@@ -41,7 +41,6 @@ class CoordinateList {
 			case 1:
 				coord = allSignChanges(coord);
 				break;
-			/*
 			//Even
 			case 2:
 				coord = evenSignChanges(coord);
@@ -50,7 +49,6 @@ class CoordinateList {
 			case 3:
 				coord = oddSignChanges(coord);
 				break;
-			*/
 		}
 		
 		switch(this.options.permutation) {
@@ -73,6 +71,7 @@ class CoordinateList {
 		}
 	}
 	
+	//returns: void
 	clear() {
 		this.coordinates = [];
 		this.textArea.value = '';
@@ -89,13 +88,15 @@ class CoordinateList {
 	}
 }
 
+//str: string
+//returns: Point
 function parse(str) {
 	str = str.trim();
 	str = str.substr(1, str.length - 2).split(',');
 	const res = [];
 	
 	for(let i = 0; i < str.length; i++)
-		res.push(parseFloat(str[i]));
+		res.push(eval(str[i]));
 	
 	return res;
 }

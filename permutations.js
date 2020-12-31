@@ -1,12 +1,15 @@
 //Apply a function to all members of an array.
-//array: Point[]
+//coord: Point | Point[]
 //fun: Point => Point[]
 //returns: Point[]
-function applyConcat(array, fun) {
-	let res = [];
-	for(let i = 0; i < array.length; i++)
-		res = res.concat(fun(array[i]));
-	return res;
+function applyConcat(coord, fun) {
+	if(coord[0] instanceof Array) {
+		let res = [];
+		for(let i = 0; i < coord.length; i++)
+			res = res.concat(fun(coord[i]));
+		return res;
+	}
+	return fun(coord);
 }
 
 //Apply a function either to a single object, or to an array thereof.
@@ -49,100 +52,115 @@ function sort(array) {
 	return parity;
 }
 
+//Returns [0, 1, ..., n - 1].
+//n: number
+//returns: number[]
+function range(n) {	
+	const indices = [];
+	for(let i = 0; i < n; i++)
+		indices.push(i);
+		
+	return indices;
+}
+
 //Calculates all permutations of an array of points.
-//array: Point[]
+//coord: Point | Point[]
 //returns: Point[][]
-function permutations(array) {
-	return applyConcat(array, _permutations);
+function permutations(coord) {
+	return applyConcat(coord, _permutations);
 }
 
 //Calculates all permutations of a point.
-//array: Point
+//coord: Point
 //returns: Point[][]
-function _permutations(array) {
+function _permutations(coord) {
 	//Sorts the sequence in increasing order.
-	array.sort();
+	coord.sort();
 	const res = [];
 	
 	while(true) {
 		//Adds a copy of the array.
-		res.push([...array]);
+		res.push([...coord]);
 		
 		//Searches for the last point the sequence strictly increases.
-		let i = array.length;
-		while(i-- > 0 && array[i - 1] >= array[i]);
+		let i = coord.length;
+		while(i-- > 0 && coord[i - 1] >= coord[i]);
 		
 		//Return if the sequence is now decreasing.
 		if(i === 0) return res;
 		
-		//Finds the next smallest thing larger than array[i - 1].
+		//Finds the next smallest thing larger than coord[i - 1].
 		let j = i;
-		while(array[j] > array[i - 1]) j++;
+		while(coord[j] > coord[i - 1]) j++;
 		
-		//Swaps it with array[i - 1].
-		swap(array, i - 1, --j);
+		//Swaps it with coord[i - 1].
+		swap(coord, i - 1, --j);
 		
-		//Reverses the entire thing from array[i] onwards.
-		j = array.length - 1;
-		while(i < j) swap(array, i++, j--);
+		//Reverses the entire thing from coord[i] onwards.
+		j = coord.length - 1;
+		while(i < j) swap(coord, i++, j--);
 	}
 }
 
-//array: Point[]
-function evenPermutations(array) {
-	return applyConcat(array, (x => _parityPermutations(x, true)));
+//coord: Point | Point[]
+function evenPermutations(coord) {
+	return applyConcat(coord, (x => _parityPermutations(x, true)));
 }
 
-//array: Point[]
-function oddPermutations(array) {
-	return applyConcat(array, (x => _parityPermutations(x, false)));
+//coord: Point | Point[]
+function oddPermutations(coord) {
+	return applyConcat(coord, (x => _parityPermutations(x, false)));
 }
 
-//array: Point
-function _parityPermutations(array, parity) {
+//coord: Point
+function _parityPermutations(coord, parity) {
 	//Sorts the sequence in increasing order. Changes the parity accordingly.
-	if(!sort(array)) parity = !parity;
+	if(!sort(coord)) parity = !parity;
 	
 	//If two elements are equal, parity is irrelevant.
-	for(let i = 0; i < array.length - 1; i++)
-		if(array[i] === array[i + 1])
-			return _permutations(array);
+	for(let i = 0; i < coord.length - 1; i++)
+		if(coord[i] === coord[i + 1])
+			return _permutations(coord);
 			
 	const res = [];
 	
 	while(true) {
 		//Adds a copy of the array.
-		if(parity) res.push([...array]);
+		if(parity) res.push([...coord]);
 		
 		//Searches for the last point the sequence strictly increases.
-		let i = array.length;
-		while(i-- > 0 && array[i - 1] >= array[i]);
+		let i = coord.length;
+		while(i-- > 0 && coord[i - 1] >= coord[i]);
 		
 		//Return if the sequence is now decreasing.
 		if(i === 0) return res;
 		
-		//Finds the next smallest thing larger than array[i - 1].
+		//Finds the next smallest thing larger than coord[i - 1].
 		let j = i;
-		while(array[j] > array[i - 1]) j++;
+		while(coord[j] > coord[i - 1]) j++;
 		
 		//Swaps it with array[i - 1].
-		swap(array, i - 1, --j); parity = !parity;
+		swap(coord, i - 1, --j); parity = !parity;
 		
 		//Reverses the entire thing from array[i] onwards.
 		j = array.length - 1;
-		while(i < j) { swap(array, i++, j--); parity = !parity; }
+		while(i < j) { swap(coord, i++, j--); parity = !parity; }
 	}
 }
 
+//coord: Point | Point[]
 function allSignChanges(coord) {
-	const indices = [];
-	for(let i = 0; i < coord.length; i++)
-		indices.push(i);
-		
-	return signChanges(coord, indices);
+	return signChanges(coord, range(coord.length));
 }	
 
-function signChanges(coord, indices) {
+//coord: Point | Point[]
+//indices: number[]
+function signChanges(coord, indices) {	
+	return applyConcat(coord, (x => _signChanges(coord, indices)));
+}
+
+//coord: Point
+function _signChanges(coord, indices) {
 	if(indices.length === 0)
 		return [coord];
 	
@@ -153,4 +171,44 @@ function signChanges(coord, indices) {
 	
 	coord[idx] *= -1;
 	return res.concat(signChanges(coord, indices));
+}
+
+function evenSignChanges(coord, indices) {
+	return paritySignChanges(coord, indices, true);
+}
+
+function oddSignChanges(coord, indices) {
+	return paritySignChanges(coord, indices, false);
+}
+
+//coord: Point | Point[]
+//indices: number[]
+//parity: boolean
+function paritySignChanges(coord, indices, parity) {
+	return applyConcat(coord, (x => _paritySignChanges(x, indices || range(x.length), parity)));
+}
+
+//coord: Point
+//indices: number[]
+//parity: boolean
+function _paritySignChanges(coord, indices, parity) {
+	//If an element is zero, we can just do normal sign changes.
+	for(let i = 0; i < indices.length; i++)
+		if(coord[indices[i]] === 0)
+			return signChanges(coord, indices);
+			
+	return __paritySignChanges(coord, indices, parity);
+}
+
+//coord: Point
+//indices: number[]
+//parity: boolean
+function __paritySignChanges(coord, indices, parity) {
+	if(indices.length === 0)
+		return parity ? [coord] : [];
+	
+	const idx = indices.pop();
+	const res = __paritySignChanges([...coord], [...indices], parity);	
+	coord[idx] *= -1;
+	return res.concat(__paritySignChanges(coord, indices, !parity));
 }
