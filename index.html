@@ -2,6 +2,8 @@
 <html>
 	<head>
 		<meta charset="UTF-8">
+		<title>OFFBuilder</title>
+		<link rel="icon" href="public/offbuilder.ico">
 		
 		<style>
 			* {
@@ -102,6 +104,8 @@
 	</head>
 	
 	<body>
+		<a id="dl-a" href=""></a>
+		
 		<div id="main-div">
 			<div id="input-div">
 				<label for="in-txt" id="coord-lbl">Coordinates:</label>
@@ -199,12 +203,14 @@
 		</div>
 		
 		<div id="buttons-div">
-			<input type="button" id="clear-btn" value="Clear"/>			
+			<input type="button" id="clear-btn" value="Clear" />			
 			<input type="button" id="insert-btn" style="float:right" value="Insert"/>
-			<input type="button" id="copy-btn" style="float:right" value="Copy"/>	
+			<input type="button" id="copy-btn" style="float:right" value="Copy"/>
 			<input type="button" id="import-btn" style="float:right" value="Import"/>
 			<input type="button" id="export-btn" style="float:right" value="Export"/>
 		</div>
+		
+		<input id="input-ofd" type="file" style="opacity:0"/>
 		
 		<script src="src/ace.js"></script>
 		<script src="src/mode-javascript.js"></script>
@@ -217,7 +223,11 @@
 			const copy_btn = document.getElementById('copy-btn');
 			const code_txt = document.getElementById('code-txt');
 			const dimensions_nud = document.getElementById('dimensions-nud');
+			const dl_a = document.getElementById('dl-a');
+			const export_btn = document.getElementById('export-btn');
+			const import_btn = document.getElementById('import-btn');
 			const project_btn = document.getElementById('project-btn');
+			const input_ofd = document.getElementById('input-ofd');
 			
 			var editor = ace.edit("code-txt");
 			var JavaScriptMode = ace.require("ace/mode/javascript").Mode;
@@ -225,6 +235,8 @@
 		</script>
 		<script src="src/permutations.js"></script>
 		<script src="src/coordinatelist.js"></script>
+		<script src="src/file.js"></script>
 		<script src="src/events.js"></script>
+		<script src="src/caret.js"></script>
 	</body>
 </html>

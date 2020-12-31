@@ -3,7 +3,7 @@ class CoordinateList {
 	constructor(textArea) {
 		textArea.value = '';
 		this.textArea = textArea;
-		this.coordinates = [];
+		this.list = [];
 		this.dictionary = {};
 		this.options = {
 			formatting: 0,
@@ -14,7 +14,7 @@ class CoordinateList {
 	
 	//coord: Point | Point[]
 	push(coord) {
-		let _this = this;
+		const _this = this;
 		iterate(coord, (coord) => {_this._push(coord);});
 	}
 	
@@ -22,7 +22,7 @@ class CoordinateList {
 	_push(coord) {
 		const str = CoordinateList._toString(coord);
 		if(!this.dictionary[str]) {
-			this.coordinates.push(coord);
+			this.list.push(coord);
 			this.textArea.value += str + '\n';
 			this.dictionary[str] = true;
 		}
@@ -30,7 +30,7 @@ class CoordinateList {
 	
 	//coord: Point | Point[]
 	add(coord) {
-		let _this = this;
+		const _this = this;
 		iterate(coord, (coord) => {_this._add(coord);});
 	}
 	
@@ -73,7 +73,7 @@ class CoordinateList {
 	
 	//returns: void
 	clear() {
-		this.coordinates = [];
+		this.list = [];
 		this.textArea.value = '';
 		this.dictionary = {};
 	}
@@ -101,4 +101,4 @@ function parse(str) {
 	return res;
 }
 
-var coordinates = new CoordinateList(out_txt);
+const coordinates = new CoordinateList(out_txt);

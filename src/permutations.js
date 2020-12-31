@@ -75,7 +75,7 @@ function permutations(coord) {
 //returns: Point[][]
 function _permutations(coord) {
 	//Sorts the sequence in increasing order.
-	coord.sort();
+	coord.sort((a, b) => {return a - b;});
 	const res = [];
 	
 	while(true) {
@@ -143,7 +143,7 @@ function _parityPermutations(coord, parity) {
 		swap(coord, i - 1, --j); parity = !parity;
 		
 		//Reverses the entire thing from array[i] onwards.
-		j = array.length - 1;
+		j = coord.length - 1;
 		while(i < j) { swap(coord, i++, j--); parity = !parity; }
 	}
 }
