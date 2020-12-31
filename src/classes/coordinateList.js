@@ -1,3 +1,5 @@
+"use strict";
+
 class CoordinateList {
 	//textArea: self-descriptive
 	constructor(textArea) {
@@ -9,6 +11,7 @@ class CoordinateList {
 			formatting: 0,
 			sign: 0,
 			permutation: 0,
+			parentheses: false
 		};
 	}
 	
@@ -31,7 +34,7 @@ class CoordinateList {
 	//coord: Point | Point[]
 	add(coord) {
 		const _this = this;
-		iterate(coord, (coord) => {_this._add(coord);});
+		iterate(coord, (coord) => { _this._add(coord); });
 	}
 	
 	//coord: Point
@@ -91,8 +94,13 @@ class CoordinateList {
 //str: string
 //returns: Point
 function parse(str) {
-	str = str.trim();
-	str = str.substr(1, str.length - 2).split(',');
+	const c = (coordinates.options.formatting === 1) ? ',' : ' ';	
+	str = str.replace(/ +/g, ' ').trim();
+	
+	if(coordinates.options.parentheses)
+		str = str.substr(1, str.length - 2);
+	str = str.split(c);
+	
 	const res = [];
 	
 	for(let i = 0; i < str.length; i++)

@@ -1,3 +1,5 @@
+"use strict";
+
 //On coordinate textbox enter.
 in_txt.addEventListener('keydown', event => {
 	if(event.key !== "Enter") return;
@@ -60,18 +62,31 @@ code_txt.addEventListener('keydown', event => {
 	}
 });
 
-//Configs sign radio buttons.
-document.forms.signFrm.signs.forEach((radio, i) => {
+//Configs formatting radio buttons.
+document.forms.formatting.radio.forEach((radio, i) => {
 	radio.checked = (i === 0);
-	radio.addEventListener('change', () => {
+	radio.addEventListener('change', event => {
+		coordinates.options.formatting = i;
+	});
+});
+
+//Configs sign radio buttons.
+document.forms.signs.radio.forEach((radio, i) => {
+	radio.checked = (i === 0);
+	radio.addEventListener('change', event => {
 		coordinates.options.sign = i;
 	});
 });
 
 //Configs permutation radio buttons.
-document.forms.permFrm.perms.forEach((radio, i) => {
+document.forms.perms.radio.forEach((radio, i) => {
 	radio.checked = (i === 0);
-	radio.addEventListener('change', () => {
+	radio.addEventListener('change', event => {
 		coordinates.options.permutation = i;
 	});
+});
+
+paren_chk.checked = false;
+paren_chk.addEventListener('change', event => {
+	coordinates.options.parentheses = paren_chk.checked;
 });

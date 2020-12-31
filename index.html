@@ -59,7 +59,7 @@
 				padding:0;
 			}
 			
-			input[type="radio"] {
+			input[type="radio"], input[type="checkbox"] {
 				margin: 7px 0 7px 0;
 			}
 			
@@ -116,9 +116,9 @@
 				<fieldset>
 					<legend>Dimensions</legend>
 					
-					<input type="number" min="1" max="100" value="4" id="dimensions-nud"/>		
+					<input type="number" min="1" max="100" value="4" id="dimensions-nud" />		
 					
-					<input type="button" style="float:right;" id="project-btn"/>
+					<input type="button" style="float:right;" id="project-btn" />
 				</fieldset>
 				
 				<fieldset>
@@ -127,64 +127,69 @@
 					⚬ Constants&nbsp;&nbsp;
 					
 					<input type="button" class="squareBtn" value="+" id="plusconst-btn" />					
-					<input type="button" class="squareBtn" value="×" id="minusconst-btn"/>					
+					<input type="button" class="squareBtn" value="×" id="minusconst-btn" />					
 				</fieldset>
 				
 				<fieldset>
 					<legend>Formatting</legend>		
 					
-					<input name="formatting" type="radio" id="spaces-rad" checked />
-					<label for="spaces-rad">Separate by spaces</label><br/>
-					
-					<input name="formatting" type="radio" id="commas-rad"/>
-					<label for="commas-rad">Separate by commas</label><br/>				
+					<form name="formatting">
+						<input name="radio" type="radio" id="spaces-rad" checked />
+						<label for="spaces-rad">Separate by spaces</label><br />
+						
+						<input name="radio" type="radio" id="commas-rad" />
+						<label for="commas-rad">Separate by commas</label><br />
+						
+						<input type="checkbox" id="paren-chk" />
+						<label for="paren-chk">Enclosing parentheses</label><br />
+					</form>					
 				</fieldset>			
 				
 				<fieldset>
 					<legend>Sign changes</legend>	
 					
-					<form name="signFrm">
-						<input name="signs" type="radio" id="nosigns-rad" checked />
-						<label for="nosigns-rad">No sign changes</label><br/>
+					<form name="signs">
+						<input name="radio" type="radio" id="nosigns-rad" checked />
+						<label for="nosigns-rad">No sign changes</label><br />
 						
-						<input name="signs" type="radio" id="allsigns-rad"/>
-						<label for="allsigns-rad">All sign changes</label><br/>
+						<input name="radio" type="radio" id="allsigns-rad" />
+						<label for="allsigns-rad">All sign changes</label><br />
 						
-						<input name="signs" type="radio" id="evensigns-rad"/>
-						<label for="evensigns-rad">Even sign changes</label><br/>
+						<input name="radio" type="radio" id="evensigns-rad" />
+						<label for="evensigns-rad">Even sign changes</label><br />
 						
-						<input name="signs" type="radio" id="oddsigns-rad"/>
-						<label for="oddsigns-rad">Odd sign changes</label><br/>
+						<input name="radio" type="radio" id="oddsigns-rad" />
+						<label for="oddsigns-rad">Odd sign changes</label><br />
 						
-						<input name="signs" type="radio" id="customsigns-rad"/>
+						<input name="radio" type="radio" id="customsigns-rad" />
 						<label for="customsigns-rad">Custom&nbsp;&nbsp;</label>	
 						
-						<input type="button" class="squareBtn" value="+" id="plussigns-btn"/>					
-						<input type="button" class="squareBtn" value="×" id="minussigns-btn"/>		
+						<input type="button" class="squareBtn" value="+" id="plussigns-btn" />					
+						<input type="button" class="squareBtn" value="×" id="minussigns-btn" />		
 					</form>		
 				</fieldset>
 				
 				<fieldset>
 					<legend>Permutations</legend>		
 					
-					<form name="permFrm">
-						<input name="perms" type="radio" id="noperms-rad" checked />
+					<form name="perms">
+						<input name="radio" type="radio" id="noperms-rad" checked />
 						<label for="noperms-rad">No permutations</label><br/>
 						
-						<input name="perms" type="radio" id="allperms-rad"/>
+						<input name="radio" type="radio" id="allperms-rad" />
 						<label for="allperms-rad">All permutations</label><br/>
 						
-						<input name="perms" type="radio" id="evenperms-rad"/>
+						<input name="radio" type="radio" id="evenperms-rad" />
 						<label for="evenperms-rad">Even permutations</label><br/>
 						
-						<input name="perms" type="radio" id="oddperms-rad"/>
+						<input name="radio" type="radio" id="oddperms-rad" />
 						<label for="oddperms-rad">Odd permutations</label><br/>
 						
-						<input name="perms" type="radio" id="customperms-rad"/>
+						<input name="radio" type="radio" id="customperms-rad" />
 						<label for="customperms-rad">Custom&nbsp;&nbsp;</label>	
 						
-						<input type="button" class="squareBtn" value="+" id="plusperms-btn"/>					
-						<input type="button" class="squareBtn" value="×" id="minusperms-btn"/>	
+						<input type="button" class="squareBtn" value="+" id="plusperms-btn" />					
+						<input type="button" class="squareBtn" value="×" id="minusperms-btn" />	
 					</form>					
 				</fieldset>
 			</div>
@@ -210,11 +215,11 @@
 			<input type="button" id="export-btn" style="float:right" value="Export"/>
 		</div>
 		
-		<input id="input-ofd" type="file" style="opacity:0"/>
+		<input id="input-ofd" type="file" style="position: fixed; top: -100em"/>
 		
-		<script src="src/ace.js"></script>
-		<script src="src/mode-javascript.js"></script>
-		<script src="src/worker-javascript.js"></script>
+		<script src="src/ace/ace.js"></script>
+		<script src="src/ace/mode-javascript.js"></script>
+		<script src="src/ace/worker-javascript.js"></script>
 		<script>
 			const in_txt = document.getElementById('in-txt');
 			const out_txt = document.getElementById('out-txt');
@@ -227,16 +232,20 @@
 			const export_btn = document.getElementById('export-btn');
 			const import_btn = document.getElementById('import-btn');
 			const project_btn = document.getElementById('project-btn');
+			const paren_chk = document.getElementById('paren-chk');
 			const input_ofd = document.getElementById('input-ofd');
 			
-			var editor = ace.edit("code-txt");
-			var JavaScriptMode = ace.require("ace/mode/javascript").Mode;
+			const editor = ace.edit("code-txt");
+			const JavaScriptMode = ace.require("ace/mode/javascript").Mode;
 			editor.session.setMode(new JavaScriptMode());
 		</script>
+		<script src="src/classes/caret.js"></script>
+		<script src="src/classes/coordinateList.js"></script>
+		<script src="src/classes/linkedListNode.js"></script>
 		<script src="src/permutations.js"></script>
-		<script src="src/coordinatelist.js"></script>
+		<script src="src/auxiliary.js"></script>
+		<script src="src/extras.js"></script>
 		<script src="src/file.js"></script>
 		<script src="src/events.js"></script>
-		<script src="src/caret.js"></script>
 	</body>
 </html>
