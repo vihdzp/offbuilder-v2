@@ -1,2 +1,2 @@
 # OFFBuilder
-Generates OFF files for convex polytopes from their coordinates.
+Generates OFF files for convex polytopes from their coordinates. Runs in the browser.
