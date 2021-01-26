@@ -144,13 +144,13 @@ export const importCoordinates = function(event) {
 		elementList[d] = newElements;
 	}
 
-	if(dim > 3 && elementList[dim - 1] != ridgeCount)
+	if(elementList[dim - 2].length != ridgeCount)
 		alert("WARNING: Ridge count does not match expected value!");
 
 	// Faces are currently in terms of their edges.
 	// We convert them to an ordered vertex representation.
-	for(let f = 0; f < elementList[2].length; f++) {
-		const face = elementList[2][f];
+	for(let f = 0; f < faces.length; f++) {
+		const face = faces[f];
 		const linkedList = [];
 
 		for(let i = 0; i < face.length; i++) {
@@ -167,7 +167,7 @@ export const importCoordinates = function(event) {
 		}
 
 		//Gets the cycle starting from whichever of the face's vertices.
-		elementList[2][f] = linkedList[edges[face[0]][0]].getCycle();
+		faces[f] = linkedList[edges[face[0]][0]].getCycle();
 	}
 
 	//Writes the OFF file.
@@ -189,19 +189,19 @@ export const importCoordinates = function(event) {
 	txt += '\n';
 
 	// The corresponding numbers.
-	txt += elementList[0].length;
+	txt += vertices.length;
 	if(dim >= 3)
-		txt += ' ' + elementList[2].length;
+		txt += ' ' + faces.length;
 	if(dim >= 2)
-		txt += ' ' + elementList[1].length;
+		txt += ' ' + edges.length;
 	for(let i = 3; i < dim; i++)
 		txt += ' ' + elementList[i].length;
 	txt += '\n\n';
 
 	// Vertices.
 	txt += '# ' + elementNames(0) + '\n';
-	for(let i = 0; i < elementList[0].length; i++) {
-		const vertex = elementList[0][i];
+	for(let i = 0; i < vertices.length; i++) {
+		const vertex = vertices[i];
 		txt += vertex[0];
 
 		for(let j = 1; j < dim; j++)

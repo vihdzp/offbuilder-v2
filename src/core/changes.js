@@ -63,20 +63,33 @@ globalThis.oddPermutations = oddPermutations;
  * @returns {Point[]} All permutations of the point.
  */
 function permutations(coord, indices, parity) {
-	indices ||= range(coord.length);
+	const dim = coord[0] instanceof Array ? coord[0].length : coord.length;
+	indices ||= range(dim);
 
+	// Goes through each permutation in lexicographic order, skipping even/odd
+	// ones if necessary.
 	return applyConcat(coord, function(coord) {
+		let _parity = parity.clone();
+
 		// Sorts the sequence in increasing order. Changes the parity
 		// accordingly.
 		if(!sort(coord, indices))
-			parity.flip();
+			_parity.flip();
+
+		// If any two entries are repeated, even/odd permutations are simply
+		// equal to all permutations.
+		for(let i = 0; i < indices.length - 1; i++)
+			if (coord[indices[i]] === coord[indices[i + 1]]) {
+				_parity = new Parity('all');
+				break;
+			}
 
 		const res = [];
 
 		// While the permutations are being calculated.
-		while(true) {			
+		while(true) {
 			// Adds a copy of the current coordinates.
-			if(parity.check()) 
+			if(_parity.check()) 
 				res.push([...coord]);
 			
 			// Searches for the last point the sequence strictly increases.
@@ -94,13 +107,13 @@ function permutations(coord, indices, parity) {
 
 			// Swaps it with coord[indices[i - 1]].
 			swap(coord, indices[i - 1], indices[--j]);
-			parity.flip();
+			_parity.flip();
 
 			// Reverses the entire thing from array[i] onwards.
 			j = indices.length - 1;
 			while(i < j) {
 				swap(coord, indices[i++], indices[j--]);
-				parity.flip();
+				_parity.flip();
 			}
 		}
 	});
@@ -156,9 +169,11 @@ globalThis.oddSignChanges = oddSignChanges;
  * @returns {Point[]} All sign changes of the point.
  */
 function signChanges(coord, indices, parity) {
+	const dim = coord[0] instanceof Array ? coord[0].length : coord.length;
+	
 	return applyConcat(coord, (coord) => _signChanges(
 		coord, 
-		indices || range(coord.length),
+		indices || range(dim),
 		parity
 	));
 
@@ -166,11 +181,15 @@ function signChanges(coord, indices, parity) {
 		if(indices.length === 0)
 			return parity.check() ? [coord] : [];
 
-		const idx = indices.pop(),
-			res = _signChanges([...coord], [...indices], parity.clone());
+		const idx = indices.pop();
 
-		coord[idx] *= -1;
-		return res.concat(_signChanges(coord, indices, parity.flip()));		
+		if(coord[idx] === 0) 
+			return _signChanges([...coord], [...indices], new Parity('all'));		
+		else {
+			const res = _signChanges([...coord], [...indices], parity.clone());
+			coord[idx] *= -1;
+			return res.concat(_signChanges(coord, indices, parity.flip()));	
+		}	
 	}
 }
 
