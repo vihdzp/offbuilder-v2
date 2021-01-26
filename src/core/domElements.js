@@ -1,0 +1,11 @@
+export const in_txt = document.getElementById('in-txt');
+export const insert_btn = document.getElementById('insert-btn');
+export const clear_btn = document.getElementById('clear-btn');
+export const copy_btn = document.getElementById('copy-btn');
+export const code_txt = document.getElementById('code-txt');
+export const dimensions_nud = document.getElementById('dimensions-nud');
+export const export_btn = document.getElementById('export-btn');
+export const import_btn = document.getElementById('import-btn');
+export const project_btn = document.getElementById('project-btn');
+export const paren_chk = document.getElementById('paren-chk');
+export const input_ofd = document.getElementById('input-ofd');

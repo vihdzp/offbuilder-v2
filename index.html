@@ -4,30 +4,30 @@
 		<meta charset="UTF-8">
 		<title>OFFBuilder</title>
 		<link rel="icon" href="public/offbuilder.ico">
-		
+
 		<style>
 			* {
 				box-sizing:border-box;
 				font-family:sans-serif;
 			}
-			
+
 			.ace_editor * {
 				font-family: monospace;
 			}
-			
+
 			#main-div {
 				width:calc(100vw - 10px);
 				height:calc(100vh - 60px);
 				margin:0;
 			}
-			
+
 			#coord-lbl {
 				text-align:center;
 				display:block;
 				font-size:16px;
 				font-weight:bold;
 			}
-			
+
 			.secondary-lbl {
 				height:20px;
 				text-align:center;
@@ -35,66 +35,66 @@
 				font-size:14px;
 				font-weight:bold;
 			}
-			
+
 			#main-div>div {
 				float:left;
 			}
-			
+
 			#input-div {
 				width:100%;
 				height:60px;
 				padding:5px 15px 0 10px;
 			}
-			
+
 			#in-txt {
 				width:100%;
 				height:20px;
 				text-align:center;
 			}
-			
-			#options-div {			
+
+			#options-div {
 				width:30%;
 				height:calc(100% - 60px);
 				overflow:auto;
 				padding:0;
 			}
-			
+
 			input[type="radio"], input[type="checkbox"] {
 				margin: 7px 0 7px 0;
 			}
-			
+
 			.squareBtn {
 				height:23px;
 				width:23px;
 				font-size:14px;
 				padding:0;
 			}
-			
+
 			#textarea-div {
 				width:70%;
 				height:calc(100% - 60px);
 				padding:10px;
 			}
-			
+
 			#output-div, #code-div {
 				width:100%;
 				height:50%;
 			}
-			
+
 			textarea {
 				position:relative;
 				width:100%;
 				height:calc(100% - 30px);
 				resize:none
 			}
-			
+
 			#code-txt {
 				position:relative;
 				width:100%;
 				height:calc(100% - 30px);
 				border:1px solid gray;
 			}
-			
+
 			#buttons-div>input {
 				font-size:16px;
 				width:80px;
@@ -102,150 +102,131 @@
 			}
 		</style>
 	</head>
-	
+
 	<body>
 		<a id="dl-a" href=""></a>
-		
+
 		<div id="main-div">
 			<div id="input-div">
 				<label for="in-txt" id="coord-lbl">Coordinates:</label>
 				<input type="text" id="in-txt"/>
 			</div>
-			
+
 			<div id="options-div">
 				<fieldset>
 					<legend>Dimensions</legend>
-					
-					<input type="number" min="1" max="100" value="4" id="dimensions-nud" />		
-					
+
+					<input type="number" min="1" max="100" value="4" id="dimensions-nud" />
+
 					<input type="button" style="float:right;" id="project-btn" />
 				</fieldset>
-				
+
 				<fieldset>
 					<legend>Variables</legend>
-					
+
 					⚬ Constants&nbsp;&nbsp;
-					
-					<input type="button" class="squareBtn" value="+" id="plusconst-btn" />					
-					<input type="button" class="squareBtn" value="×" id="minusconst-btn" />					
+
+					<input type="button" class="squareBtn" value="+" id="plusconst-btn" />
+					<input type="button" class="squareBtn" value="×" id="minusconst-btn" />
 				</fieldset>
-				
+
 				<fieldset>
-					<legend>Formatting</legend>		
-					
+					<legend>Formatting</legend>
+
 					<form name="formatting">
 						<input name="radio" type="radio" id="spaces-rad" checked />
 						<label for="spaces-rad">Separate by spaces</label><br />
-						
+
 						<input name="radio" type="radio" id="commas-rad" />
 						<label for="commas-rad">Separate by commas</label><br />
-						
+
 						<input type="checkbox" id="paren-chk" />
 						<label for="paren-chk">Enclosing parentheses</label><br />
-					</form>					
-				</fieldset>			
-				
+					</form>
+				</fieldset>
+
 				<fieldset>
-					<legend>Sign changes</legend>	
-					
+					<legend>Sign changes</legend>
+
 					<form name="signs">
 						<input name="radio" type="radio" id="nosigns-rad" checked />
 						<label for="nosigns-rad">No sign changes</label><br />
-						
+
 						<input name="radio" type="radio" id="allsigns-rad" />
 						<label for="allsigns-rad">All sign changes</label><br />
-						
+
 						<input name="radio" type="radio" id="evensigns-rad" />
 						<label for="evensigns-rad">Even sign changes</label><br />
-						
+
 						<input name="radio" type="radio" id="oddsigns-rad" />
 						<label for="oddsigns-rad">Odd sign changes</label><br />
-						
+
 						<input name="radio" type="radio" id="customsigns-rad" />
-						<label for="customsigns-rad">Custom&nbsp;&nbsp;</label>	
-						
-						<input type="button" class="squareBtn" value="+" id="plussigns-btn" />					
-						<input type="button" class="squareBtn" value="×" id="minussigns-btn" />		
-					</form>		
+						<label for="customsigns-rad">Custom&nbsp;&nbsp;</label>
+
+						<input type="button" class="squareBtn" value="+" id="plussigns-btn" />
+						<input type="button" class="squareBtn" value="×" id="minussigns-btn" />
+					</form>
 				</fieldset>
-				
+
 				<fieldset>
-					<legend>Permutations</legend>		
-					
+					<legend>Permutations</legend>
+
 					<form name="perms">
 						<input name="radio" type="radio" id="noperms-rad" checked />
 						<label for="noperms-rad">No permutations</label><br/>
-						
+
 						<input name="radio" type="radio" id="allperms-rad" />
 						<label for="allperms-rad">All permutations</label><br/>
-						
+
 						<input name="radio" type="radio" id="evenperms-rad" />
 						<label for="evenperms-rad">Even permutations</label><br/>
-						
+
 						<input name="radio" type="radio" id="oddperms-rad" />
 						<label for="oddperms-rad">Odd permutations</label><br/>
-						
+
 						<input name="radio" type="radio" id="customperms-rad" />
-						<label for="customperms-rad">Custom&nbsp;&nbsp;</label>	
-						
-						<input type="button" class="squareBtn" value="+" id="plusperms-btn" />					
-						<input type="button" class="squareBtn" value="×" id="minusperms-btn" />	
-					</form>					
+						<label for="customperms-rad">Custom&nbsp;&nbsp;</label>
+
+						<input type="button" class="squareBtn" value="+" id="plusperms-btn" />
+						<input type="button" class="squareBtn" value="×" id="minusperms-btn" />
+					</form>
 				</fieldset>
 			</div>
-			
+
 			<div id="textarea-div">
 				<div id="output-div">
 					<label for="out-txt" class="secondary-lbl">Output</label>
 					<textarea id="out-txt" readonly></textarea>
 				</div>
-				
+
 				<div id="code-div">
 					<label for="code-txt" class="secondary-lbl">Code</label>
 					<div id="code-txt"></div>
 				</div>
 			</div>
 		</div>
-		
+
 		<div id="buttons-div">
-			<input type="button" id="clear-btn" value="Clear" />			
+			<input type="button" id="clear-btn" value="Clear" />
 			<input type="button" id="insert-btn" style="float:right" value="Insert"/>
 			<input type="button" id="copy-btn" style="float:right" value="Copy"/>
 			<input type="button" id="import-btn" style="float:right" value="Import"/>
 			<input type="button" id="export-btn" style="float:right" value="Export"/>
 		</div>
-		
+
 		<input id="input-ofd" type="file" style="position: fixed; top: -100em"/>
-		
+
+		<!-- Loads ace. -->
 		<script src="src/ace/ace.js"></script>
 		<script src="src/ace/mode-javascript.js"></script>
 		<script src="src/ace/worker-javascript.js"></script>
 		<script>
-			const in_txt = document.getElementById('in-txt');
-			const out_txt = document.getElementById('out-txt');
-			const insert_btn = document.getElementById('insert-btn');
-			const clear_btn = document.getElementById('clear-btn');
-			const copy_btn = document.getElementById('copy-btn');
-			const code_txt = document.getElementById('code-txt');
-			const dimensions_nud = document.getElementById('dimensions-nud');
-			const dl_a = document.getElementById('dl-a');
-			const export_btn = document.getElementById('export-btn');
-			const import_btn = document.getElementById('import-btn');
-			const project_btn = document.getElementById('project-btn');
-			const paren_chk = document.getElementById('paren-chk');
-			const input_ofd = document.getElementById('input-ofd');
-			
 			const editor = ace.edit("code-txt");
 			const JavaScriptMode = ace.require("ace/mode/javascript").Mode;
 			editor.session.setMode(new JavaScriptMode());
 		</script>
-		<script src="src/classes/caret.js"></script>
-		<script src="src/classes/coordinateList.js"></script>
-		<script src="src/classes/linkedListNode.js"></script>
-		<script src="src/permutations.js"></script>
-		<script src="src/auxiliary.js"></script>
-		<script src="src/extras.js"></script>
-		<script src="src/file.js"></script>
-		<script src="src/events.js"></script>
+
+		<script type="module" src="src/main.js"></script>
 	</body>
 </html>

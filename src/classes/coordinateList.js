@@ -1,12 +1,26 @@
-"use strict";
+import * as Changes from "../core/changes.js";
 
-class CoordinateList {
-	//textArea: self-descriptive
+/**
+ * Wraps around a list of coordinates, and contains methods to add to it.
+ */
+export default class CoordinateList {
+	/**
+	 * Constructor for the CoordinateList class.
+	 *
+	 * @param {TextArea} textArea The text area to which the coordinates are
+	 * added.
+	 */
 	constructor(textArea) {
 		textArea.value = '';
+
+		/** The text area to which the coordinates are added. */
 		this.textArea = textArea;
-		this.list = [];
+
+		/** A dictionary storing keys for all coordinates added, as well as the
+		 * coordinates themselves. */
 		this.dictionary = {};
+
+		/** An object containing the configuration of the coordinate list. */
 		this.options = {
 			formatting: 0,
 			sign: 0,
@@ -14,99 +28,111 @@ class CoordinateList {
 			parentheses: false
 		};
 	}
-	
+
 	//coord: Point | Point[]
 	push(coord) {
 		const _this = this;
-		iterate(coord, (coord) => {_this._push(coord);});
+
+		iterate(coord, function(coord) {
+			const str = string(coord);
+
+			if(_this.dictionary[str] === undefined) {
+				_this.dictionary[str] = coord;
+				_this.textArea.value += str + '\n';
+			}
+		});
 	}
-	
-	//coord: Point
-	_push(coord) {
-		const str = CoordinateList._toString(coord);
-		if(!this.dictionary[str]) {
-			this.list.push(coord);
-			this.textArea.value += str + '\n';
-			this.dictionary[str] = true;
-		}
-	}
-	
+
 	//coord: Point | Point[]
 	add(coord) {
 		const _this = this;
-		iterate(coord, (coord) => { _this._add(coord); });
+		iterate(coord, function(coord) {
+			switch(_this.options.sign) {
+				//All
+				case 1:
+					coord = Changes.allSignChanges(coord);
+					break;
+				//Even
+				case 2:
+					coord = Changes.evenSignChanges(coord);
+					break;
+				//Odd
+				case 3:
+					coord = Changes.oddSignChanges(coord);
+					break;
+			}
+
+			switch(_this.options.permutation) {
+				//None
+				case 0:
+					_this.push(coord);
+					break;
+				//All
+				case 1:
+					_this.push(Changes.allPermutations(coord));
+					break;
+				//Even
+				case 2:
+					_this.push(Changes.evenPermutations(coord));
+					break;
+				//Odd
+				case 3:
+					_this.push(Changes.oddPermutations(coord));
+					break;
+			}
+		});
 	}
-	
-	//coord: Point
-	_add(coord) {
-		switch(this.options.sign) {
-			//All
-			case 1:
-				coord = allSignChanges(coord);
-				break;
-			//Even
-			case 2:
-				coord = evenSignChanges(coord);
-				break;
-			//Odd
-			case 3:
-				coord = oddSignChanges(coord);
-				break;
-		}
-		
-		switch(this.options.permutation) {
-			//None
-			case 0:
-				this.push(coord);
-				break;
-			//All
-			case 1:
-				this.push(permutations(coord));
-				break;
-			//Even
-			case 2:
-				this.push(evenPermutations(coord));
-				break;
-			//Odd
-			case 3:
-				this.push(oddPermutations(coord));
-				break;					
-		}
+
+	get separator() {
+		return this.options.formatting ? ',' : ' ';
 	}
-	
-	//returns: void
+
+	/**
+	 * Parses a string representing a Point according to the coordinate list's
+	 * options.
+	 *
+	 * @param {string} str The string to parse.
+	 * @returns {Point} The point the string represents.
+	 */
+	parse(str) {
+		// The separator character.
+		const c = this.separator;
+
+		// Removes extra whitespaces from the string.
+		str = str.replace(/ +/g, ' ').trim();
+
+		// Removes the parentheses wrapping the point.
+		if(this.options.parentheses)
+			str = str.substr(1, str.length - 2);
+
+		// Evaluates each coordinate, returns the resulting point.
+		return str.split(c).map(eval);
+	}
+
+	/**
+	 * Clears the coordinate list.
+	 */
 	clear() {
-		this.list = [];
 		this.textArea.value = '';
 		this.dictionary = {};
 	}
-	
-	//coord: Point
-	static _toString(coord) {
-		let str = '(';
-		let i;
-		for(i = 0; i < coord.length - 1; i++)
-			str += coord[i] + ', ';
-		return str + coord[i] + ')';
-	}
 }
 
-//str: string
-//returns: Point
-function parse(str) {
-	const c = (coordinates.options.formatting === 1) ? ',' : ' ';	
-	str = str.replace(/ +/g, ' ').trim();
-	
-	if(coordinates.options.parentheses)
-		str = str.substr(1, str.length - 2);
-	str = str.split(c);
-	
-	const res = [];
-	
-	for(let i = 0; i < str.length; i++)
-		res.push(eval(str[i]));
-	
-	return res;
+/**
+ * Apply a function either to a single object, or to each in an array thereof.
+ *
+ * @param {Point | Point[]} coord Either a point or an array thereof.
+ * @param {Point => void} fun A function on points.
+ */
+function iterate(coord, fun) {
+	coord[0] instanceof Array ?	coord.forEach(fun) : fun(coord);
 }
 
-const coordinates = new CoordinateList(out_txt);
+/**
+ * Converts a point into a string, to be added to the text area.
+ *
+ * @param {Point} coord The point to convert into a string.
+ */
+function string(coord) {
+	return '(' + coord.toString() + ')';
+}
