@@ -41,7 +41,7 @@ export const exportCoordinates = function() {
 
 	// Writes each of the points' coordinates.
 	values.forEach((point) => {
-		txt += point.toString().replace(',', ' ') + '\n';
+		txt += point.toString().replaceAll(',', ' ') + '\n';
 	});
 
 	// Saves the file.
@@ -144,7 +144,7 @@ export const importCoordinates = function(event) {
 		elementList[d] = newElements;
 	}
 
-	if(elementList[dim - 1] != ridgeCount)
+	if(dim > 3 && elementList[dim - 1] != ridgeCount)
 		alert("WARNING: Ridge count does not match expected value!");
 
 	// Faces are currently in terms of their edges.
