@@ -3,6 +3,20 @@ import Caret from "../classes/caret.js";
 import { dimensions_nud } from "./domElements.js";
 import coordinates from "./coordinates.js";
 
+import SVD from '../svd/svd.js';
+
+const elementNames = [ 
+	"Vertices", 
+	"Edges", 
+	"Faces", 
+	"Cells",
+	"Tera", 
+	"Peta", 
+	"Exa",
+	"Zetta",
+	"Yotta" 
+];
+
 export function exportCoordinates() {
 	let txt = dimensions_nud.value + '\n';
 
@@ -22,52 +36,64 @@ export function exportCoordinates() {
 	saveFile(txt, 'polytope_input.txt', 'text/plain');
 }
 
-const elementNames = [ "Vertices", "Edges", "Faces", "Cells", "Tera", "Peta", "Exa", "Zetta", "Yotta" ];
-
+const EPS = 1e-6;
 export const importCoordinates = function(event) {
 	//Loads header info, declares some variables.
 	const caret = new Caret(event.target.result),
 		dim = caret.readNumber(),
 		vertexCount = caret.readNumber(),
 		facetCount = caret.readNumber(),
-		ridgeCount = caret.readNumber(),
-		elementList = [[]];
+		ridgeCount = caret.readNumber();
+
+	const elementList = [[]],
+		vertices = elementList[0];
 
 	//Reads the output file, gets the elements.
 
 	//Reads vertices.
 	for(let i = 0; i < vertexCount; i++) {
-		elementList[0].push([]);
+		vertices.push([]);
+
 		for(let j = 0; j < dim; j++)
-			elementList[0][i].push(caret.readNumber());
+			vertices[i].push(caret.readNumber());
 	}
 
 	//Reads facets.
 	elementList[dim - 1] = [];
-	for(let i = 0; i < facetCount; i++) {
-		const elCount = caret.readNumber();
-		const facet = [];
 
-		for(let j = 0; j < elCount; j++)
+	for(let i = 0; i < facetCount; i++) {
+		// Reads vertex indices.
+		const elCount = caret.readNumber(),
+			facet = [];
+		
+		for(let j = 0; j < elCount; j++)	
 			facet.push(caret.readNumber());
+
+		// Adds facet to elementList.
 		elementList[dim - 1].push(facet.sort((a, b) => {return a - b;}));
 	}
 
-	//Generates (d - 1)-dimensional elements out of d-dimensional elements.
-	//At the same time, rewrites d-elements in terms of them.
+	// Generates (d - 1)-dimensional elements out of d-dimensional elements.
+	// At the same time, rewrites d-elements in terms of them.
 	for(let d = dim - 1; d >= 2; d--) {
 		elementList[d - 1] = [];
-		const newElements = [];
-		for(let i = 0; i < elementList[d].length; i++)
-			newElements[i] = [];
 
-		//Two d-dimensional elements have a common face iff they have at least d common vertices
-		//NOT CONTAINED IN (d-2)-DIMENSIONAL SPACE (this code won't yet work for 5D!)
-		for(let i = 0; i < elementList[d].length; i++)
-			for(let j = i + 1; j < elementList[d].length; j++) {
-				const commonElements = common(elementList[d][i], elementList[d][j]);
+		// Initializes newElements.
+		const faces = elementList[d],
+			newElements = new Array(faces.length).fill(0).map(() => []);
 
-				if(commonElements.length >= d && (d <= 4 || rankstuff())) {
+		// Two d-dimensional elements have a common face iff they have at least
+		// d common vertices and are not contained in (d - 2)-dimensional space.
+		for(let i = 0; i < faces.length; i++)
+			for(let j = i + 1; j < faces.length; j++) {
+				const commonElements = common(faces[i], faces[j]);
+
+				// It is possible for two d-faces to share more than d 
+				// elements without them being a common (d - 1)-face, only 
+				// when d >= 4.
+				if(commonElements.length >= d && (d >= 4 || 
+					dimension(commonElements.map(x => [...vertices[x]])) === d - 1
+				)) {
 					//Checks that the element has not been added before.
 					const duplicate = checkDuplicate(elementList[d - 1], commonElements, equal);
 
@@ -171,8 +197,29 @@ export const importCoordinates = function(event) {
 	saveFile(txt, 'polytope.off', 'application/off');
 }
 
-function rankstuff() {
-	return true;
+function dimension(matrix) {
+	const lastRow = matrix.pop();
+	
+	const m = matrix.length, 
+		n = matrix[0].length;
+
+	for(let i = 0; i < m; i++)
+		for(let j = 0; j < n; j++)
+			matrix[i][j] -= lastRow[j];	
+
+	if(m < n) {
+		const newMatrix = new Array(n).fill(0).map(() => new Array(m));
+
+		for(let i = 0; i < m; i++)
+			for(let j = 0; j < n; j++)
+				newMatrix[j][i] = matrix[i][j];
+		
+		matrix = newMatrix;
+	}
+
+	let rank = 0;
+	SVD(matrix).q.forEach((x) => {if(!(x <= EPS)) rank++;});
+	return rank;
 }
 
 const dl_a = document.getElementById('dl-a');
@@ -187,9 +234,6 @@ function saveFile(txt, fileName, mimeType) {
 		dl_a.click();
 	}
 }
-
-"use strict";
-
 
 //Returns the common elements of two sorted arrays.
 //el1: number[]

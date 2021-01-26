@@ -29,7 +29,12 @@ export default class CoordinateList {
 		};
 	}
 
-	//coord: Point | Point[]
+	/**
+	 * Adds a point or array of points to the coordinate list, without further
+	 * processing.
+	 * 
+	 * @param {Point | Point[]} coord A point or array thereof.
+	 */
 	push(coord) {
 		const _this = this;
 
@@ -43,9 +48,15 @@ export default class CoordinateList {
 		});
 	}
 
-	//coord: Point | Point[]
+	/**
+	 * Adds a point or array of points to the coordinate list, also applying any
+	 * permutations and sign changes.
+	 * 
+	 * @param {Point | Point[]} coord A point or array thereof.
+	 */
 	add(coord) {
 		const _this = this;
+
 		iterate(coord, function(coord) {
 			switch(_this.options.sign) {
 				//All
@@ -83,6 +94,11 @@ export default class CoordinateList {
 		});
 	}
 
+	/**
+	 * The character to use as a coordinate separator.
+	 * 
+	 * @returns {string} Either ',' or ' ', depending on the options.
+	 */
 	get separator() {
 		return this.options.formatting ? ',' : ' ';
 	}
