@@ -8,18 +8,16 @@ export default class Parity {
   /**
    * Constructor for the Parity class.
    *
-   * @param type The type of parity of the permutation: either "even", "odd" or
-   * "all".
+   * @param {string} type The type of parity of the permutation: either "even", 
+   * "odd" or "all".
    */
   constructor(type) {
-    if(typeof type === 'string') {
-      if(type === 'even')
-        this.parity = true;
-      else if(type === 'odd')
-        this.parity = false;
-    }
-    else 
-      this.parity = type;
+    if(type === 'even')
+      this.parity = true;
+    else if(type === 'odd')
+      this.parity = false;
+
+    // The 'all' type is stored as an undefined parity.
   }
 
   /**
@@ -34,12 +32,21 @@ export default class Parity {
 
   /**
    * Checks whether the permutation type is even or all.
+   * 
+   * @returns {boolean} Whether the permutation type is even or all.
    */
   check() {
     return this.parity !== false;
   }
 
+  /**
+   * Clones a Parity object.
+   * 
+   * @returns {Parity} A Parity object with the same type as this.
+   */
   clone() {
-    return new Parity(this.parity);
+    const obj = new Parity();
+    obj.parity = this.parity;
+    return obj;
   }
 }

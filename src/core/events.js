@@ -22,17 +22,17 @@ in_txt.addEventListener('keydown', event => {
 });
 
 // On insert button click.
-insert_btn.addEventListener('click', event => {
+insert_btn.addEventListener('click', () => {
 	coordinates.add(coordinates.parse(in_txt.value));
 });
 
 // On clear button click.
-clear_btn.addEventListener('click', event => {
+clear_btn.addEventListener('click', () => {
 	coordinates.clear();
 });
 
 // On copy button click.
-copy_btn.addEventListener('click', event => {
+copy_btn.addEventListener('click', () => {
 	out_txt.select();
 	out_txt.setSelectionRange(0, 999999);
 
@@ -43,7 +43,7 @@ copy_btn.addEventListener('click', event => {
 export_btn.addEventListener('click', exportCoordinates);
 
 // On import button click.
-import_btn.addEventListener('click', event => {
+import_btn.addEventListener('click', () => {
 	input_ofd.click();
 });
 
@@ -58,10 +58,21 @@ input_ofd.addEventListener('change', event => {
 });
 
 // On dimensions number-up-down change.
-dimensions_nud.addEventListener('input', event => {
-	project_btn.value = 'Project to ' + (dimensions_nud.value - 1) + 'D';
+function dimChange() {
+	const value = Number(dimensions_nud.value);
+
+	coordinates.setDimensions(value);
+	project_btn.value = 'Project to ' + (value - 1) + 'D';
+}
+dimensions_nud.addEventListener('input', dimChange);
+dimChange();
+
+// On project button click.
+project_btn.addEventListener('click', () => {
+	coordinates.project();
+	dimensions_nud.value--;
+	dimChange();
 });
-project_btn.value = 'Project to ' + (dimensions_nud.value - 1) + 'D';
 
 // On code textbox keydown.
 code_txt.addEventListener('keydown', event => {
@@ -76,7 +87,7 @@ code_txt.addEventListener('keydown', event => {
 	}
 });
 
-// Configs formatting radio buttons.
+// Configures formatting radio buttons.
 document.forms.formatting.radio.forEach((radio, i) => {
 	radio.checked = (i === 0);
 	radio.addEventListener('change', event => {
@@ -84,7 +95,7 @@ document.forms.formatting.radio.forEach((radio, i) => {
 	});
 });
 
-// Configs sign radio buttons.
+// Configures sign radio buttons.
 document.forms.signs.radio.forEach((radio, i) => {
 	radio.checked = (i === 0);
 	radio.addEventListener('change', event => {
@@ -92,7 +103,7 @@ document.forms.signs.radio.forEach((radio, i) => {
 	});
 });
 
-// Configs permutation radio buttons.
+// Configures permutation radio buttons.
 document.forms.perms.radio.forEach((radio, i) => {
 	radio.checked = (i === 0);
 	radio.addEventListener('change', event => {
@@ -100,6 +111,7 @@ document.forms.perms.radio.forEach((radio, i) => {
 	});
 });
 
+// Configures the parenthesis checkbox.
 paren_chk.checked = false;
 paren_chk.addEventListener('change', event => {
 	coordinates.options.parentheses = paren_chk.checked;

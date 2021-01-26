@@ -27,6 +27,9 @@ export default class CoordinateList {
 			permutation: 0,
 			parentheses: false
 		};
+
+		/** The number of dimensions of the coordinate list. */
+		this.dimensions = 3;
 	}
 
 	/**
@@ -40,8 +43,11 @@ export default class CoordinateList {
 
 		iterate(coord, function(coord) {
 			const str = string(coord);
-
-			if(_this.dictionary[str] === undefined) {
+			
+			if(
+				coord.length === _this.dimensions
+				&&_this.dictionary[str] === undefined
+			) {
 				_this.dictionary[str] = coord;
 				_this.textArea.value += str + '\n';
 			}
@@ -92,6 +98,58 @@ export default class CoordinateList {
 					break;
 			}
 		});
+	}
+
+	setDimensions(dim) {
+		if(this.dimensions !== dim) {
+			this.dimensions = dim;
+			this.clear();
+		}
+	}
+
+	project() {
+		const newCoords = new CoordinateList(this.textArea),
+			dim = this.dimensions;
+
+		newCoords.dimensions = --this.dimensions;
+
+		// Declares projection matrix.
+		const matrix = [];
+		for(let i = 0; i < dim - 1; i++) {
+			const row = [];
+			matrix.push(row);
+
+			const val1 = -1 / Math.sqrt(2 * (i + 1) * (i + 2)),
+				val2 = -val1 * (i + 1); 
+
+			// Fills the entries.
+			for(let j = 0; j <= i; j++) 
+				row[j] = val1;
+
+			row[i + 1] = val2;
+
+			for(let j = i + 2; j < dim; j++)
+				row[j] = 0;
+		}
+
+		for(const key in this.dictionary)
+			newCoords.push(_project(this.dictionary[key]));
+		
+		this.dictionary = newCoords.dictionary;
+
+		function _project(point) {
+			const res = [];
+
+			for(let i = 0; i < dim - 1; i++) {
+				let entry = 0;
+				for(let j = 0; j < dim; j++) 
+					entry += point[j] * matrix[i][j];
+				
+				res.push(entry);
+			}
+
+			return res;
+		}
 	}
 
 	/**
