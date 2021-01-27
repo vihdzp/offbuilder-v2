@@ -62,9 +62,7 @@ export const importCoordinates = function(event) {
 		ridgeCount = caret.readNumber();
 
 	const elementList = new Array(dim + 1).fill(0).map(() => []),
-		vertices = elementList[0],
-		edges = elementList[1],
-		faces = elementList[2];
+		vertices = elementList[0];
 
 	// Reads the output file, gets the elements.
 
@@ -147,12 +145,18 @@ export const importCoordinates = function(event) {
 	if(elementList[dim - 2].length != ridgeCount)
 		alert("WARNING: Ridge count does not match expected value!");
 
+	const edges = elementList[1],
+		faces = elementList[2];
+
 	// Faces are currently in terms of their edges.
 	// We convert them to an ordered vertex representation.
 	for(let f = 0; f < faces.length; f++) {
-		const face = faces[f];
-		const linkedList = [];
+		const face = faces[f],
+			linkedList = [];
 
+		if(f >= 45)
+			console.log(face.map(f => edges[f]));
+			
 		for(let i = 0; i < face.length; i++) {
 			const edge = edges[face[i]];
 
@@ -162,7 +166,7 @@ export const importCoordinates = function(event) {
 				if(!linkedList[vertex])
 					linkedList[vertex] = new LinkedListNode(vertex);
 			}
-
+			
 			linkedList[edge[0]].linkTo(linkedList[edge[1]]);
 		}
 
