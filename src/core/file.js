@@ -2,6 +2,7 @@ import LinkedListNode from "../classes/linkedListNode.js";
 import Caret from "../classes/caret.js";
 import { dimensions_nud, dl_a } from "./domElements.js";
 import coordinates from "./coordinates.js";
+import AvlTree from "./avl.js";
 
 import SVD from '../svd/svd.js';
 
@@ -89,15 +90,35 @@ export const importCoordinates = function(event) {
 
 	// Generates (d - 1)-elements out of d-elements.
 	// At the same time, rewrites d-elements in terms of them.
+
 	for(let d = dim - 1; d >= 2; d--) {
 		// Initializes newElements.
 		const dElements = elementList[d],
-			newElements = new Array(dElements.length).fill(0).map(() => []);
+			dm1Elements = new AvlTree(faceCompare),
+			len = dElements.length,
+			newElements = new Array(len).fill(0).map(() => []);
+
+		// Debug stuff.
+		let time = Date.now(),
+			iter = 0;
+		
+		const total = len * (len - 1) / 200;
 
 		// Two d-dimensional elements have a common face iff they have at least
 		// d common vertices and are not contained in (d - 2)-dimensional space.
-		for(let i = 0; i < dElements.length; i++)
-			for(let j = i + 1; j < dElements.length; j++) {
+		for(let i = 0; i < len; i++) {
+			if(Date.now() - time > 5000) {
+				console.log("Dimension: " + d + ". Progress: " + iter / total + "%.");
+				time = Date.now();
+			}
+		
+			for(let j = i + 1; j < len; j++) {
+				iter++;
+
+				// The indices of the common points between the two arrays.
+				// If these actually become a new (d - 1)-element, a index
+				// attribute is added, specifying the order in which they were
+				// added.
 				const commonElements = common(dElements[i], dElements[j]);
 
 				// It is possible for two d-elements to share more than d 
@@ -108,38 +129,50 @@ export const importCoordinates = function(event) {
 						commonElements.map(x => [...vertices[x]])
 					) === d - 1
 				)) {
-					const dm1Elements = elementList[d - 1],
-						newEl1 = newElements[i],
+					const newEl1 = newElements[i],
 						newEl2 = newElements[j];
 
 					// Checks that the element has not been added before.
-					const duplicate = checkDuplicate(
-						dm1Elements, commonElements
-					);
+					const duplicate = dm1Elements.getNode(commonElements);
 
 					// If not, adds the element to the element list and the 
 					// corresponding parent elements.
-					if(duplicate === -1) {
-						const idx = dm1Elements.length;
-						
+					if(duplicate === null) {
+						const idx = dm1Elements.size;
+						commonElements.index = idx;
+
 						newEl1.push(idx);
 						newEl2.push(idx);
-						dm1Elements.push(commonElements);
+						dm1Elements.insert(commonElements);
 					}
 
 					// Otherwise, only adds the element to the corresponding
 					// parent elements.
 					else {
-						if(newEl1.indexOf(duplicate) === -1)
-							newEl1.push(duplicate);
+						const idx = duplicate.key.index;
 
-						if(newEl2.indexOf(duplicate) === -1)
-							newEl2.push(duplicate);
+						if(newEl1.indexOf(idx) === -1)
+							newEl1.push(idx);
+
+						if(newEl2.indexOf(idx) === -1)
+							newEl2.push(idx);
 					}
 				}
 			}
+		}
 
+		const sortdm1Elements = new Array(dm1Elements.size);
+		let node = dm1Elements.findMinimumNode();
+		while(node) {
+			const key = node.key;
+
+			sortdm1Elements[key.index] = key;
+			node = dm1Elements.next(node);
+		}
+
+		// Currently, each of the d - 1 elements is storing 
 		elementList[d] = newElements;
+		elementList[d - 1] = sortdm1Elements;
 	}
 
 	if(elementList[dim - 2].length != ridgeCount)
@@ -153,9 +186,6 @@ export const importCoordinates = function(event) {
 	for(let f = 0; f < faces.length; f++) {
 		const face = faces[f],
 			linkedList = [];
-
-		if(f >= 45)
-			console.log(face.map(f => edges[f]));
 			
 		for(let i = 0; i < face.length; i++) {
 			const edge = edges[face[i]];
@@ -170,7 +200,7 @@ export const importCoordinates = function(event) {
 			linkedList[edge[0]].linkTo(linkedList[edge[1]]);
 		}
 
-		//Gets the cycle starting from whichever of the face's vertices.
+		// Gets the cycle starting from whichever of the face's vertices.
 		faces[f] = linkedList[edges[face[0]][0]].getCycle();
 	}
 
@@ -303,10 +333,13 @@ function saveFile(txt, fileName, mimeType) {
  * el2.
  */
 function common(el1, el2) {
-	const common = [];
+	const common = [],
+		len1 = el1.length, 
+		len2 = el2.length;
+
 	let m = 0, n = 0;
 
-	while(m < el1.length && n < el2.length) {
+	while(m < len1 && n < len2) {
 		if(el1[m] < el2[n])
 			m++;
 		else if(el1[m] > el2[n])
@@ -352,4 +385,13 @@ function equal(arr1, arr2) {
 			return false;
 
 	return true;
+}
+
+function faceCompare(el1, el2) {
+	const len = Math.min(el1.length, el2.length);
+	for(let i = 0; i < len; i++)
+		if(el1[i] !== el2[i])
+			return el1[i] - el2[i];
+
+	return el1.length - el2.length;		
 }
