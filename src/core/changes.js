@@ -211,7 +211,8 @@ function swap(array, i, j) {
  * bubblesort as a sorting algorithm.
  *
  * @param {Array} array The array to sort.
- * @returns {number} Whether the number of swaps was even.
+ * @param {number} indices The set of indices to sort.
+ * @returns {boolean} Whether the number of swaps was even.
  */
 function sort(array, indices) {
 	let checks = indices.length,
