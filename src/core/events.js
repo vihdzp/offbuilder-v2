@@ -70,9 +70,10 @@ function dimChange() {
 	project_btn.value = `Project to ${value - 1}D`;
 
 	for(let i = 0; i < coordinates.signChanges.length; i++)
-		configCheckbox('sgn', i);
+		configCheckboxes('sgn', i);
+	
 	for(let i = 0; i < coordinates.permutations.length; i++)
-		configCheckbox('prm', i);
+		configCheckboxes('prm', i);
 }
 dimensions_nud.addEventListener('input', dimChange);
 dimChange();
@@ -82,12 +83,6 @@ project_btn.addEventListener('click', () => {
 	coordinates.project();
 	dimensions_nud.value--;
 	dimChange();
-
-	for(let i = 0; i < coordinates.signChanges.length; i++)
-		configCheckbox('sgn', i);
-		
-	for(let i = 0; i < coordinates.permutations.length; i++)
-		configCheckbox('prm', i);
 });
 
 // On code textbox keydown.
@@ -171,7 +166,7 @@ function addChange(key) {
 	div.id = `${key}${idx}-div`;
 	frm.appendChild(div);
 
-	changes.push({type: 0, indices: new Array(coordinates.dimensions).fill(true)});
+	changes.push({type: 0, indices: []});
 
 	// Configures the radio buttons.
 	document.getElementById(`${key}${idx}-frm`).radio.forEach((radio, i) => {
@@ -182,35 +177,43 @@ function addChange(key) {
 		});
 	});
 
-	// Configures the checkboxes.
-	configCheckbox(key, idx);
+	// Configures the checkboxes.	
+	configCheckboxes(key, idx);
 }
 
-function configCheckbox(key, idx) {	
+function configCheckboxes(key, idx) {	
 	const div = document.getElementById(`${key}${idx}-div`);
-	const changes = key === 'sgn' ? coordinates.signChanges : coordinates.permutations;
+	const len = div.children.length / 2;
+	const dim = coordinates.dimensions;
+	const changes = key === 'sgn' ? coordinates.signChanges[idx] : coordinates.permutations[idx];
 
-	div.innerHTML = "";
+	console.log(idx);
+	if(dim > len)
+		for(let i = len; i < dim; i++) {
+			const chk = document.createElement("input");
+			chk.id = `${key}${idx}-chk${i}`;
+			chk.type = "checkbox";
+			chk.checked = true;
+			div.appendChild(chk);
 
-	for(let i = 0; i < coordinates.dimensions; i++) {
-		const chk = document.createElement("input");
-		chk.id = `${key}${idx}-chk${i}`;
-		chk.type = "checkbox";
-		chk.checked = true;
-		div.append(chk);
+			const label = document.createElement("label");
+			label.htmlFor = chk.id;
+			label.appendChild(document.createTextNode(
+				' ' + (i + 1) + '\u00A0\u00A0\u00A0'
+			));
+			div.appendChild(label);
 
-		const label = document.createElement("label");
-		label.htmlFor = chk.id;
-		label.appendChild(document.createTextNode(
-			' ' + (i + 1) + '\u00A0\u00A0\u00A0'
-		));
-		div.appendChild(label);
-	}
-	
-	for(let i = 0; i < coordinates.dimensions; i++) {
-		const chk = document.getElementById(`${key}${idx}-chk${i}`);
-		chk.addEventListener('change', () => {
-			changes[idx].indices[i] = chk.checked;
-		});
-	}
+			chk.addEventListener('change', () => {
+				changes.indices[i] = chk.checked;
+			});
+
+			changes.indices.push(true);
+		}
+	else
+		for(let i = len; i > dim; i--) {
+			div.removeChild(div.lastChild);
+			div.removeChild(div.lastChild);
+
+			changes.indices.pop();
+		}	
 }
