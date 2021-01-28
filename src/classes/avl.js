@@ -283,10 +283,10 @@ export default class AvlTree {
 	 * @param key The key being searched for.
 	 * @returns The node or null if it doesn't exist.
 	 */
-	getNode(key) {
+	get(key) {
 		if (!this.root) return null;
 
-		return this._getNode(key, this.root);
+		return this._get(key, this.root);
 	}
 
 	/**
@@ -296,18 +296,18 @@ export default class AvlTree {
 	 * @param root The root of the tree to search in.
 	 * @returns The node or null if it doesn't exist.
 	 */
-	_getNode(key, root) {
+	_get(key, root) {
 		const result = this.compare(key, root.key);
 
 		if (result === 0) return root;
 
 		if (result < 0) {
 			if (!root.left) return null;
-			return this.get(key, root.left);
+			return this._get(key, root.left);
 		}
 
 		if (!root.right) return null;
-		return this.get(key, root.right);
+		return this._get(key, root.right);
 	}
 
 	/**
