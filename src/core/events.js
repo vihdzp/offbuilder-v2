@@ -68,6 +68,11 @@ function dimChange() {
 
 	coordinates.setDimensions(value);
 	project_btn.value = `Project to ${value - 1}D`;
+
+	for(let i = 0; i < coordinates.signChanges.length; i++)
+		configCheckbox('sgn', i);
+	for(let i = 0; i < coordinates.permutations.length; i++)
+		configCheckbox('prm', i);
 }
 dimensions_nud.addEventListener('input', dimChange);
 dimChange();
