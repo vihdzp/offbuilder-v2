@@ -1,4 +1,4 @@
-import Parity from "./parity.js";
+import Parity from "../classes/parity.js";
 
 /**
  * Applies a function to all members of an array, and concatenates the output.
@@ -157,6 +157,29 @@ export const oddSignChanges = function(coord, indices) {
 	return signChanges(coord, indices, new Parity('odd'));
 }
 globalThis.oddSignChanges = oddSignChanges;
+
+/**
+ * Calculates all full sign changes (changing either none or all sighns at once)
+ * of a point or array of points.
+ *
+ * @param {Point | Point[]} coord Either a point or an array thereof.
+ * @param {number[]?} indices The indices to which the sign change will be
+ * applied. Defaults to [0, 1, ..., n - 1].
+ * @returns {Point[]} All full sign changes of each of the points.
+ */
+export const fullSignChanges = function(coord, indices) {
+	const dim = coord[0] instanceof Array ? coord[0].length : coord.length;
+	indices ||= range(dim);
+
+	return applyConcat(coord, function(coord) {
+		const flipCoord = [...coord];
+		for(let i = 0; i < indices.length ;i++)
+			flipCoord[indices[i]] *= -1;
+
+		return [coord, flipCoord];
+	});
+}
+globalThis.fullSignChanges = fullSignChanges;
 
 /**
  * Calculates all sign changes with a given parity of a point or array of

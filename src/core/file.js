@@ -2,7 +2,7 @@ import LinkedListNode from "../classes/linkedListNode.js";
 import Caret from "../classes/caret.js";
 import { dimensions_nud, dl_a } from "./domElements.js";
 import coordinates from "./coordinates.js";
-import AvlTree from "./avl.js";
+import AvlTree from "../classes/avl.js";
 
 import SVD from '../svd/svd.js';
 
@@ -98,6 +98,9 @@ export const importCoordinates = function(event) {
 			len = dElements.length,
 			newElements = new Array(len).fill(0).map(() => []);
 
+		// dm1Elements is stored as an AVL tree, so that we can quickly figure
+		// out whether a face has been added before or not.
+
 		// Debug stuff.
 		let time = Date.now(),
 			iter = 0;
@@ -107,8 +110,9 @@ export const importCoordinates = function(event) {
 		// Two d-dimensional elements have a common face iff they have at least
 		// d common vertices and are not contained in (d - 2)-dimensional space.
 		for(let i = 0; i < len; i++) {
+			// For very long calculations, logs progress every 5s.
 			if(Date.now() - time > 5000) {
-				console.log("Dimension: " + d + ". Progress: " + iter / total + "%.");
+				console.log(`Dimension: ${d}. Progress: ${iter / total}%.`);
 				time = Date.now();
 			}
 		
@@ -161,6 +165,9 @@ export const importCoordinates = function(event) {
 			}
 		}
 
+		// The (d - 1)-elements were saved as arrays in an AVL tree with an 
+		// index attribute. We thus go through the tree and put every element
+		// in the correct position in a new array.
 		const sortdm1Elements = new Array(dm1Elements.size);
 		let node = dm1Elements.findMinimumNode();
 		while(node) {
@@ -175,6 +182,7 @@ export const importCoordinates = function(event) {
 		elementList[d - 1] = sortdm1Elements;
 	}
 
+	// Quick sanity test.
 	if(elementList[dim - 2].length != ridgeCount)
 		alert("WARNING: Ridge count does not match expected value!");
 
@@ -187,6 +195,7 @@ export const importCoordinates = function(event) {
 		const face = faces[f],
 			linkedList = [];
 			
+		// We build a linked list with all of the edges of the face.
 		for(let i = 0; i < face.length; i++) {
 			const edge = edges[face[i]];
 
@@ -204,7 +213,7 @@ export const importCoordinates = function(event) {
 		faces[f] = linkedList[edges[face[0]][0]].getCycle();
 	}
 
-	//Writes the OFF file.
+	// Writes the OFF file.
 
 	// nOFF
 	let txt = '';
@@ -352,41 +361,13 @@ function common(el1, el2) {
 }
 
 /**
- * Checks whether an array has already been added to another.
+ * Sorts two arrays by their contents in lexicographic order.
  * 
- * @param {number[][]} array The array in which the search is made.
- * @param {number[]} key The array for which we're searching.
- * @returns {number} The index of the array if it's found, -1 otherwise.
+ * @param {number[]} el1 The first array.
+ * @param {number[]} el2 The second array.
+ * @returns {number} A negative number if el1 < el2, a positive number if 
+ * el1 > el2, 0 otherwise. 
  */
-function checkDuplicate(array, key) {
-	for(let i = 0; i < array.length; i++) 
-		if(equal(array[i], key))
-			return i;
-
-	return -1;
-}
-
-/**
- * Checks whether two arrays have exactly the same contents.
- * 
- * @param {number[]} arr1 The first array.
- * @param {number{}} arr2 The second array.
- * @returns {boolean} Whether the two arrays have the same terms in the same
- * order.
- */
-function equal(arr1, arr2) {
-	// Compares the lengths of the arrays.
-	if(arr1.length != arr2.length)
-		return false;
-
-	// Compares elements pairwise.
-	for(let i = 0; i < arr1.length; i++)
-		if(arr1[i] != arr2[i])
-			return false;
-
-	return true;
-}
-
 function faceCompare(el1, el2) {
 	const len = Math.min(el1.length, el2.length);
 	for(let i = 0; i < len; i++)

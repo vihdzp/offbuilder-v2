@@ -23,10 +23,11 @@ export default class CoordinateList {
 		/** An object containing the configuration of the coordinate list. */
 		this.options = {
 			formatting: 0,
-			sign: 0,
-			permutation: 0,
 			parentheses: false
 		};
+
+		this.permutations = [];
+		this.signChanges = [];
 
 		/** The number of dimensions of the coordinate list. */
 		this.dimensions = 3;
@@ -42,12 +43,16 @@ export default class CoordinateList {
 		const _this = this;
 
 		iterate(coord, function(coord) {
+			if(coord.length > _this.dimensions)
+				coord = coord.slice(0, _this.dimensions)
+			else if(coord.length < _this.dimensions)
+				coord = coord.concat(
+					new Array(_this.dimensions - coord.length).fill(0)
+				);
+
 			const str = string(coord);
 			
-			if(
-				coord.length === _this.dimensions
-				&&_this.dictionary[str] === undefined
-			) {
+			if(_this.dictionary[str] === undefined) {
 				_this.dictionary[str] = coord;
 				_this.textArea.value += str + '\n';
 			}
@@ -64,39 +69,51 @@ export default class CoordinateList {
 		const _this = this;
 
 		iterate(coord, function(coord) {
-			switch(_this.options.sign) {
-				//All
-				case 1:
-					coord = Changes.allSignChanges(coord);
-					break;
-				//Even
-				case 2:
-					coord = Changes.evenSignChanges(coord);
-					break;
-				//Odd
-				case 3:
-					coord = Changes.oddSignChanges(coord);
-					break;
-			}
+			_this.signChanges.forEach(sign => {
+				const indices = [];
+				for(let i = 0; i < _this.dimensions; i++)
+					if(sign.indices[i])
+						indices.push(i);
 
-			switch(_this.options.permutation) {
-				//None
-				case 0:
-					_this.push(coord);
-					break;
-				//All
-				case 1:
-					_this.push(Changes.allPermutations(coord));
-					break;
-				//Even
-				case 2:
-					_this.push(Changes.evenPermutations(coord));
-					break;
-				//Odd
-				case 3:
-					_this.push(Changes.oddPermutations(coord));
-					break;
-			}
+				switch(sign.type) {
+					//All
+					case 1:
+						coord = Changes.allSignChanges(coord, indices);
+						break;
+					//Even
+					case 2:
+						coord = Changes.evenSignChanges(coord, indices);
+						break;
+					//Odd
+					case 3:
+						coord = Changes.oddSignChanges(coord, indices);
+						break;
+				}
+			});
+
+			_this.permutations.forEach(perm => {
+				const indices = [];
+				for(let i = 0; i < _this.dimensions; i++)
+					if(perm.indices[i])
+						indices.push(i);
+
+				switch(perm.type) {
+					//All
+					case 1:
+						coord = Changes.allPermutations(coord, indices);
+						break;
+					//Even
+					case 2:
+						coord = Changes.evenPermutations(coord, indices);
+						break;
+					//Odd
+					case 3:
+						coord = Changes.oddPermutations(coord, indices);
+						break;
+				}
+			});
+
+			_this.push(coord);
 		});
 	}
 
@@ -169,18 +186,28 @@ export default class CoordinateList {
 	 * @returns {Point} The point the string represents.
 	 */
 	parse(str) {
-		// The separator character.
-		const c = this.separator;
+		try {
+			// The separator character.
+			const c = this.separator;
 
-		// Removes extra whitespaces from the string.
-		str = str.replace(/ +/g, ' ').trim();
+			// Removes extra whitespaces from the string.
+			str = str.replace(/ +/g, ' ').trim();
 
-		// Removes the parentheses wrapping the point.
-		if(this.options.parentheses)
-			str = str.substr(1, str.length - 2);
+			// Removes the parentheses wrapping the point.
+			if(this.options.parentheses) {
+				if(str[0] !== '(' || str[str.length - 1] !== ')')
+					throw new Error("Expected enclosing parentheses.");
 
-		// Evaluates each coordinate, returns the resulting point.
-		return str.split(c).map(eval);
+				str = str.substr(1, str.length - 2);
+			}
+
+			// Evaluates each coordinate, returns the resulting point.
+			return eval('[' + str.replaceAll(c, ',') + '];');
+		}
+		catch(ex) {
+			alert(ex);
+			return [];
+		}
 	}
 
 	/**

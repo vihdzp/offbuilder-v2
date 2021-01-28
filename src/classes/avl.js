@@ -286,7 +286,7 @@ export default class AvlTree {
 	getNode(key) {
 		if (!this.root) return null;
 
-		return this.get(key, this.root);
+		return this._getNode(key, this.root);
 	}
 
 	/**
@@ -296,7 +296,7 @@ export default class AvlTree {
 	 * @param root The root of the tree to search in.
 	 * @returns The node or null if it doesn't exist.
 	 */
-	get(key, root) {
+	_getNode(key, root) {
 		const result = this.compare(key, root.key);
 
 		if (result === 0) return root;
@@ -378,32 +378,10 @@ export default class AvlTree {
 	}
 
 	/**
-	 * @returns The size of the tree.
-	 */
-	getSize() {
-		return this.size;
-	}
-
-	/**
 	 * @returns Whether the tree is empty.
 	 */
 	isEmpty() {
 		return this.size === 0;
-	}
-
-	toArray() {
-		if (this.isEmpty()) 
-			return [];
-
-    const res = [];
-    let	node = this.findMinimumNode();
-
-		while (node) {
-			res.push(node.key);
-			node = this.next(node);
-    }
-    
-		return res;
 	}
 
 	/**

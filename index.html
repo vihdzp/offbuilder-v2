@@ -6,21 +6,26 @@
 		<link rel="icon" href="public/offbuilder.ico">
 
 		<style>
+			/* Logical sizing, common font for the application. */
 			* {
 				box-sizing:border-box;
 				font-family:sans-serif;
 			}
 
+			/* Uses a monospace font for the code editor. */
 			.ace_editor * {
 				font-family: monospace;
 			}
 
+			/* The main div contains the entire application, except the buttons
+			 * on the bottom. */
 			#main-div {
 				width:calc(100vw - 10px);
-				height:calc(100vh - 60px);
+				height:calc(100vh - 55px);
 				margin:0;
 			}
 
+			/* Centers and configures the "Coordinates:" label. */
 			#coord-lbl {
 				text-align:center;
 				display:block;
@@ -28,6 +33,7 @@
 				font-weight:bold;
 			}
 
+			/* Centers and configures the "Output" and "Code" label. */
 			.secondary-lbl {
 				height:20px;
 				text-align:center;
@@ -36,33 +42,40 @@
 				font-weight:bold;
 			}
 
+			/* Aligns every new div on the main div to the left. */
 			#main-div>div {
 				float:left;
 			}
 
+			/* Configures the div to input coordinates. */
 			#input-div {
 				width:100%;
 				height:60px;
 				padding:5px 15px 0 10px;
 			}
 
+			/* Configures the "Coordinates:" textbox. */
 			#in-txt {
 				width:100%;
 				height:20px;
 				text-align:center;
 			}
 
+			/* Configure the div with the permutations and sign changes. */
 			#options-div {
 				width:30%;
 				height:calc(100% - 60px);
-				overflow:auto;
+				overflow-y:scroll;
+				overflow-x:hidden;
 				padding:0;
 			}
 
+			/* Adds spaces between radio buttons and checkboxes. */
 			input[type="radio"], input[type="checkbox"] {
 				margin: 7px 0 7px 0;
 			}
 
+			/** Configures the + and × buttons. */
 			.squareBtn {
 				height:23px;
 				width:23px;
@@ -70,12 +83,14 @@
 				padding:0;
 			}
 
+			/* Configures the "Output" and "Code" div. */
 			#textarea-div {
 				width:70%;
-				height:calc(100% - 60px);
+				height:calc(100% - 55px);
 				padding:10px;
 			}
 
+			/* Configures the "Output" and "Code" divs. */
 			#output-div, #code-div {
 				width:100%;
 				height:50%;
@@ -106,12 +121,15 @@
 	<body>
 		<a id="dl-a" href=""></a>
 
+		<!-- Main div, contains everything but the buttons. -->
 		<div id="main-div">
+			<!-- Input div, contains the coordinate textbox. -->
 			<div id="input-div">
 				<label for="in-txt" id="coord-lbl">Coordinates:</label>
-				<input type="text" id="in-txt"/>
+				<input type="text" id="in-txt" />
 			</div>
 
+			<!-- Options div, the entire left panel. -->
 			<div id="options-div">
 				<fieldset>
 					<legend>Dimensions</legend>
@@ -119,15 +137,6 @@
 					<input type="number" min="1" max="100" value="4" id="dimensions-nud" />
 
 					<input type="button" style="float:right;" id="project-btn" />
-				</fieldset>
-
-				<fieldset>
-					<legend>Variables</legend>
-
-					⚬ Constants&nbsp;&nbsp;
-
-					<input type="button" class="squareBtn" value="+" id="plusconst-btn" />
-					<input type="button" class="squareBtn" value="×" id="minusconst-btn" />
 				</fieldset>
 
 				<fieldset>
@@ -145,52 +154,18 @@
 					</form>
 				</fieldset>
 
-				<fieldset>
-					<legend>Sign changes</legend>
-
-					<form name="signs">
-						<input name="radio" type="radio" id="nosigns-rad" checked />
-						<label for="nosigns-rad">No sign changes</label><br />
-
-						<input name="radio" type="radio" id="allsigns-rad" />
-						<label for="allsigns-rad">All sign changes</label><br />
-
-						<input name="radio" type="radio" id="evensigns-rad" />
-						<label for="evensigns-rad">Even sign changes</label><br />
-
-						<input name="radio" type="radio" id="oddsigns-rad" />
-						<label for="oddsigns-rad">Odd sign changes</label><br />
-
-						<input name="radio" type="radio" id="customsigns-rad" />
-						<label for="customsigns-rad">Custom&nbsp;&nbsp;</label>
-
+				<fieldset id = "sign-fst">
+					<legend>Sign changes
 						<input type="button" class="squareBtn" value="+" id="plussigns-btn" />
 						<input type="button" class="squareBtn" value="×" id="minussigns-btn" />
-					</form>
+					</legend>					
 				</fieldset>
 
-				<fieldset>
-					<legend>Permutations</legend>
-
-					<form name="perms">
-						<input name="radio" type="radio" id="noperms-rad" checked />
-						<label for="noperms-rad">No permutations</label><br/>
-
-						<input name="radio" type="radio" id="allperms-rad" />
-						<label for="allperms-rad">All permutations</label><br/>
-
-						<input name="radio" type="radio" id="evenperms-rad" />
-						<label for="evenperms-rad">Even permutations</label><br/>
-
-						<input name="radio" type="radio" id="oddperms-rad" />
-						<label for="oddperms-rad">Odd permutations</label><br/>
-
-						<input name="radio" type="radio" id="customperms-rad" />
-						<label for="customperms-rad">Custom&nbsp;&nbsp;</label>
-
+				<fieldset id = "perm-fst">
+					<legend>Permutations						
 						<input type="button" class="squareBtn" value="+" id="plusperms-btn" />
 						<input type="button" class="squareBtn" value="×" id="minusperms-btn" />
-					</form>
+					</legend>
 				</fieldset>
 			</div>
 
