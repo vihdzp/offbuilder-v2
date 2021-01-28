@@ -63,6 +63,9 @@ globalThis.oddPermutations = oddPermutations;
  * @returns {Point[]} All permutations of the point.
  */
 function permutations(coord, indices, parity) {
+	if(indices.length === 0)
+		return coord;
+		
 	const dim = coord[0] instanceof Array ? coord[0].length : coord.length;
 	indices ||= range(dim);
 

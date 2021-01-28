@@ -35,8 +35,20 @@ export const stepPrism = function(...args) {
 }
 globalThis.stepPrism = stepPrism;
 
+export const doubleStepPrism = function(...args) {
+	return _doubleStepPrism(false, args);
+}
+globalThis.doubleStepPrism = doubleStepPrism;
+
+export const doubleGyroStepPrism = function(...args) {
+	return _doubleStepPrism(true, args);
+}
+globalThis.doubleGyroStepPrism = doubleGyroStepPrism;
+
 // Expects a 4D shape.
-export const doubleStepPrism = function(...args) {	
+function _doubleStepPrism(gyro, args) {	
+	gyro = gyro ? -1 : 1;
+
 	const res = [];
 
 	// Gets the shape and heights from the parameters.
@@ -44,30 +56,30 @@ export const doubleStepPrism = function(...args) {
 	
 	// Precalculates cosines and sines.
 	const n = shape[0], 
-		alpha = 2 * Math.PI * shape[1] / n,
+		alpha = 2 * Math.PI / n,
 		cosines = Array.from({length: n}).map((x,i) => Math.cos(alpha * i)),
 		sines = Array.from({length: n}).map((x,i) => Math.sin(alpha * i));
 
 	// Adds the coordinates.
 	for(let i = 0; i < n; i++) {
+		const j = (i * shape[1]) % n
 		res.push([
 			heights[0] * cosines[i],
 			heights[0] * sines[i],
-			heights[1] * cosines[i],
-			heights[1] * sines[i],
+			heights[1] * cosines[j],
+			heights[1] * sines[j],
 		]);
 
 		res.push([
-			heights[1] * cosines[i],
-			heights[1] * sines[i],
-			heights[0] * cosines[i],
-			heights[0] * sines[i],
+			heights[1] * cosines[i] * gyro,
+			heights[1] * sines[i] * gyro,
+			heights[0] * cosines[j],
+			heights[0] * sines[j],
 		]);
 	}
 
 	return res;
 }
-globalThis.doubleStepPrism = doubleStepPrism;
 
 function getShapeHeights(args) {
 	// Gets the shape and heights from the parameters.
