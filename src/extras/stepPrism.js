@@ -7,6 +7,8 @@ import coordinates from "../core/coordinates.js";
  * prism, or two arrays containing the shape and heights of the step prisms.
  */
 export const stepPrism = function(...args) {
+	const res = [];
+
 	// Gets the shape and heights from the parameters.
 	let [shape, heights] = getShapeHeights(args);
 	
@@ -26,13 +28,17 @@ export const stepPrism = function(...args) {
 			coord.push(heights[j] * cosines[idx], heights[j] * sines[idx]);
 		}
 		
-		coordinates.add(coord);
+		res.push(coord);
 	}
+
+	return res;
 }
 globalThis.stepPrism = stepPrism;
 
 // Expects a 4D shape.
 export const doubleStepPrism = function(...args) {	
+	const res = [];
+
 	// Gets the shape and heights from the parameters.
 	let [shape, heights] = getShapeHeights(args);
 	
@@ -44,20 +50,22 @@ export const doubleStepPrism = function(...args) {
 
 	// Adds the coordinates.
 	for(let i = 0; i < n; i++) {
-		coordinates.add([
+		res.push([
 			heights[0] * cosines[i],
 			heights[0] * sines[i],
 			heights[1] * cosines[i],
 			heights[1] * sines[i],
 		]);
 
-		coordinates.add([
+		res.push([
 			heights[1] * cosines[i],
 			heights[1] * sines[i],
 			heights[0] * cosines[i],
 			heights[0] * sines[i],
 		]);
 	}
+
+	return res;
 }
 globalThis.doubleStepPrism = doubleStepPrism;
 
