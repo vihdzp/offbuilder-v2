@@ -68,18 +68,19 @@ function permutations(coord, indices, parity) {
 
 	// Goes through each permutation in lexicographic order, skipping even/odd
 	// ones if necessary.
-	return applyConcat(coord, function(coord) {
+	return applyConcat(coord, function(c) {
+		c = [...c];
 		let _parity = parity.clone();
 
 		// Sorts the sequence in increasing order. Changes the parity
 		// accordingly.
-		if(!sort(coord, indices))
+		if(!sort(c, indices))
 			_parity.flip();
 
 		// If any two entries are repeated, even/odd permutations are simply
 		// equal to all permutations.
 		for(let i = 0; i < indices.length - 1; i++)
-			if (coord[indices[i]] === coord[indices[i + 1]]) {
+			if (c[indices[i]] === c[indices[i + 1]]) {
 				_parity = new Parity('all');
 				break;
 			}
@@ -90,29 +91,29 @@ function permutations(coord, indices, parity) {
 		while(true) {
 			// Adds a copy of the current coordinates.
 			if(_parity.check()) 
-				res.push([...coord]);
+				res.push([...c]);
 			
 			// Searches for the last point the sequence strictly increases.
 			let i = indices.length;
-			while(i-- > 0 && coord[indices[i - 1]] >= coord[indices[i]]);
+			while(i-- > 0 && c[indices[i - 1]] >= c[indices[i]]);
 
 			// Return the complete array if the sequence is now decreasing.
 			if(i === 0)
 				return res;
 
-			// Finds the next smallest thing larger than coord[indices[i - 1]].
+			// Finds the next smallest thing larger than c[indices[i - 1]].
 			let j = i;
-			while(coord[indices[j]] > coord[indices[i - 1]])
+			while(c[indices[j]] > c[indices[i - 1]])
 				j++;
 
-			// Swaps it with coord[indices[i - 1]].
-			swap(coord, indices[i - 1], indices[--j]);
+			// Swaps it with c[indices[i - 1]].
+			swap(c, indices[i - 1], indices[--j]);
 			_parity.flip();
 
 			// Reverses the entire thing from array[i] onwards.
 			j = indices.length - 1;
 			while(i < j) {
-				swap(coord, indices[i++], indices[j--]);
+				swap(c, indices[i++], indices[j--]);
 				_parity.flip();
 			}
 		}
@@ -193,27 +194,39 @@ globalThis.fullSignChanges = fullSignChanges;
  */
 function signChanges(coord, indices, parity) {
 	const dim = coord[0] instanceof Array ? coord[0].length : coord.length;
-	
-	return applyConcat(coord, (coord) => _signChanges(
-		coord, 
-		indices || range(dim),
-		parity
-	));
+	indices ||= range(dim);
 
-	function _signChanges(coord, indices, parity) {
-		if(indices.length === 0)
-			return parity.check() ? [coord] : [];
+	return applyConcat(coord, function(c) {
+		c = [...c];
 
-		const idx = indices.pop();
+		const res = [[...c]];
+		const _parity = parity.clone();
+		const newIndices = [];
 
-		if(coord[idx] === 0) 
-			return _signChanges([...coord], [...indices], new Parity('all'));		
-		else {
-			const res = _signChanges([...coord], [...indices], parity.clone());
-			coord[idx] *= -1;
-			return res.concat(_signChanges(coord, indices, parity.flip()));	
-		}	
-	}
+		for(let i = 0; i < indices.length; i++)
+			if(c[indices[i]] !== 0)
+				newIndices.push(indices[i]);
+				
+		const n = newIndices.length - ((_parity.get() === 'all') ? 0 : 1);
+		for(let i = 1; i < 2 ** n; i++) {
+			let j = 1, k = 1;
+
+			while(i % j === 0) {
+				c[newIndices[n - k]] *= -1;
+				_parity.flip();
+				j *= 2; k++;
+			}
+
+			if(_parity.get() === 'odd') {
+				c[newIndices[n]] *= -1;
+				_parity.flip();
+			}
+
+			res.push([...c]);
+		}
+
+		return res;
+	});
 }
 
 /**

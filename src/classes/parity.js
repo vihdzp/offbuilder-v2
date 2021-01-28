@@ -39,6 +39,12 @@ export default class Parity {
     return this.parity !== false;
   }
 
+  get() {
+    if(this.parity === undefined)
+      return 'all';
+    return this.parity ? 'even' : 'odd';
+  }
+
   /**
    * Clones a Parity object.
    * 

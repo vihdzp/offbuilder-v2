@@ -68,53 +68,51 @@ export default class CoordinateList {
 	add(coord) {
 		const _this = this;
 
-		iterate(coord, function(coord) {
-			_this.signChanges.forEach(sign => {
-				const indices = [];
-				for(let i = 0; i < _this.dimensions; i++)
-					if(sign.indices[i])
-						indices.push(i);
+		_this.signChanges.forEach(sign => {
+			const indices = [];
+			for(let i = 0; i < _this.dimensions; i++)
+				if(sign.indices[i])
+					indices.push(i);
 
-				switch(sign.type) {
-					//All
-					case 1:
-						coord = Changes.allSignChanges(coord, indices);
-						break;
-					//Even
-					case 2:
-						coord = Changes.evenSignChanges(coord, indices);
-						break;
-					//Odd
-					case 3:
-						coord = Changes.oddSignChanges(coord, indices);
-						break;
-				}
-			});
-
-			_this.permutations.forEach(perm => {
-				const indices = [];
-				for(let i = 0; i < _this.dimensions; i++)
-					if(perm.indices[i])
-						indices.push(i);
-
-				switch(perm.type) {
-					//All
-					case 1:
-						coord = Changes.allPermutations(coord, indices);
-						break;
-					//Even
-					case 2:
-						coord = Changes.evenPermutations(coord, indices);
-						break;
-					//Odd
-					case 3:
-						coord = Changes.oddPermutations(coord, indices);
-						break;
-				}
-			});
-
-			_this.push(coord);
+			switch(sign.type) {
+				//All
+				case 1:
+					coord = Changes.allSignChanges(coord, indices);
+					break;
+				//Even
+				case 2:
+					coord = Changes.evenSignChanges(coord, indices);
+					break;
+				//Odd
+				case 3:
+					coord = Changes.oddSignChanges(coord, indices);
+					break;
+			}
 		});
+
+		_this.permutations.forEach(perm => {
+			const indices = [];
+			for(let i = 0; i < _this.dimensions; i++)
+				if(perm.indices[i])
+					indices.push(i);
+
+			switch(perm.type) {
+				//All
+				case 1:
+					coord = Changes.allPermutations(coord, indices);
+					break;
+				//Even
+				case 2:
+					coord = Changes.evenPermutations(coord, indices);
+					break;
+				//Odd
+				case 3:
+					coord = Changes.oddPermutations(coord, indices);
+					break;
+			}
+		});
+
+		_this.push(coord);
 	}
 
 	setDimensions(dim) {

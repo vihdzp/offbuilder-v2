@@ -111,40 +111,53 @@ paren_chk.addEventListener('change', () => {
 	coordinates.options.parentheses = paren_chk.checked;
 });
 
-plussigns_btn.addEventListener('click', () => addVariable('sign changes'));
-plusperms_btn.addEventListener('click', () => addVariable('permutations'));
+plussigns_btn.addEventListener('click', () => addChange('sgn'));
+plusperms_btn.addEventListener('click', () => addChange('prm'));
 
-function addVariable(type) {
-	const fieldset = document.createElement("fieldset");
-	const key = type === 'sign changes' ? 'sgn' : 'prm'
+// A "change" refers to either a sign change or a permutation.
+function addChange(key) {
+	// The corresponding type of change.
+	const type = key === 'sgn' ? 'sign changes' : 'permutations';
+
+	// The fieldset to which the change is added.
 	const fst = key === 'sgn' ? sign_fst : perm_fst;
+
+	// The attribute of coordinates that will be modified.
 	const changes = key === 'sgn' ? coordinates.signChanges : coordinates.permutations;
+	
+	// The index of the change of the corresponding type.
 	const idx = changes.length;
 
 	// Writes down all of the basic form HTML.
-	let html = `<form id="${key}${idx}-frm">
-		<input name="radio" type="radio" id="${key}${idx}-rad0" checked />
-		<label for="${key}${idx}-rad0">No ${type}</label><br />
+	const frm = document.createElement("form");
+	frm.id = `${key}${idx}-frm`;
+	frm.className = "change";
+	fst.appendChild(frm);
 
-		<input name="radio" type="radio" id="${key}${idx}-rad1" />
-		<label for="${key}${idx}-rad1">All ${type}</label><br />
+	const labelTxt = ["No", "All", "Even", "Odd"];
+	if(key === 'sgn')
+		labelTxt.push("Full");
 
-		<input name="radio" type="radio" id="${key}${idx}-rad2" />
-		<label for="${key}${idx}-rad2">Even ${type}</label><br />
+	labelTxt.forEach((txt, i) => {
+		const input = document.createElement("input");
+		input.name = "radio";
+		input.type = "radio";
+		input.id = `${key}${idx}-rad${i}`;
+		input.checked = (i === 0);
+		frm.appendChild(input);
 
-		<input name="radio" type="radio" id="${key}${idx}-rad3" />
-		<label for="${key}${idx}-rad3">Odd ${type}</label>`;
+		const label = document.createElement("label");
+		label.htmlFor = input.id;
+		label.appendChild(document.createTextNode(' ' + txt + ` ${type}`));
+		frm.appendChild(label);
 
-	if(key === 'sgn') 
-		html += `<br />
+		frm.appendChild(document.createElement("br"));
+	});
 
-		<input name="radio" type="radio" id="${key}${idx}-rad4" />
-		<label for="${key}${idx}-rad4">Full sign changes</label>`;
-
-	html += `<div style="overflow-x:auto; width:calc(30vw - 80px);
-	white-space: nowrap;" id="${key}${idx}-div"></div></form>`;
-
-	fst.innerHTML += html;
+	const div = document.createElement("div");
+	div.className = "checkboxDiv";
+	div.id = `${key}${idx}-div`;
+	frm.appendChild(div);
 
 	changes.push({type: 0, indices: new Array(coordinates.dimensions).fill(false)});
 
@@ -154,7 +167,6 @@ function addVariable(type) {
 
 		radio.addEventListener('change', () => {
 			changes[idx].type = i;
-			console.log(i);
 		});
 	});
 
@@ -168,10 +180,19 @@ function configCheckbox(key, idx) {
 
 	div.innerHTML = "";
 
-	for(let i = 0; i < coordinates.dimensions; i++) 
-		div.innerHTML += `
-			<input type="checkbox" id="${key}${idx}-chk${i}" />
-			<label for="${key}${idx}-chk${i}">${i + 1}</label>`;
+	for(let i = 0; i < coordinates.dimensions; i++) {
+		const chk = document.createElement("input");
+		chk.id = `${key}${idx}-chk${i}`;
+		chk.type = "checkbox";
+		div.append(chk);
+
+		const label = document.createElement("label");
+		label.htmlFor = chk.id;
+		label.appendChild(document.createTextNode(
+			' ' + (i + 1) + '\u00A0\u00A0\u00A0'
+		));
+		div.appendChild(label);
+	}
 	
 	for(let i = 0; i < coordinates.dimensions; i++) {
 		const chk = document.getElementById(`${key}${idx}-chk${i}`);

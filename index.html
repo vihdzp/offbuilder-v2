@@ -75,6 +75,14 @@
 				margin: 7px 0 7px 0;
 			}
 
+			.checkboxDiv {
+				overflow-x:auto;
+				width:calc(30vw - 80px);
+				white-space:nowrap;
+				border:1px solid gray;
+				padding:2px;
+			}
+
 			/** Configures the + and × buttons. */
 			.squareBtn {
 				height:23px;
@@ -110,6 +118,11 @@
 				border:1px solid gray;
 			}
 
+			.change {
+				border:1px solid gray;
+				padding:10px;
+			}
+
 			#buttons-div>input {
 				font-size:16px;
 				width:80px;
@@ -143,14 +156,11 @@
 					<legend>Formatting</legend>
 
 					<form name="formatting">
-						<input name="radio" type="radio" id="spaces-rad" checked />
-						<label for="spaces-rad">Separate by spaces</label><br />
+						<input name="radio" type="radio" id="spaces-rad" checked /><label for="spaces-rad"> Separate by spaces</label><br />
 
-						<input name="radio" type="radio" id="commas-rad" />
-						<label for="commas-rad">Separate by commas</label><br />
+						<input name="radio" type="radio" id="commas-rad" /><label for="commas-rad"> Separate by commas</label><br />
 
-						<input type="checkbox" id="paren-chk" />
-						<label for="paren-chk">Enclosing parentheses</label><br />
+						<input type="checkbox" id="paren-chk" /><label for="paren-chk"> Enclosing parentheses</label><br />
 					</form>
 				</fieldset>
 
