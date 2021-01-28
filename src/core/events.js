@@ -4,12 +4,13 @@ import {
 	in_txt, 
 	insert_btn, 
 	clear_btn, 
+	code_txt, 
 	copy_btn, 
+	dimensions_nud, 
 	export_btn, 
 	import_btn, 
 	input_ofd, 
-	dimensions_nud, 
-	code_txt, 
+	newline_chk,
 	paren_chk,
 	perm_fst,
 	project_btn,
@@ -111,6 +112,12 @@ paren_chk.addEventListener('change', () => {
 	coordinates.options.parentheses = paren_chk.checked;
 });
 
+// Configures the parenthesis checkbox.
+newline_chk.checked = false;
+newline_chk.addEventListener('change', () => {
+	coordinates.options.newline = newline_chk.checked ? '\r\n' : '\n';
+});
+
 plussigns_btn.addEventListener('click', () => addChange('sgn'));
 plusperms_btn.addEventListener('click', () => addChange('prm'));
 
@@ -159,7 +166,7 @@ function addChange(key) {
 	div.id = `${key}${idx}-div`;
 	frm.appendChild(div);
 
-	changes.push({type: 0, indices: new Array(coordinates.dimensions).fill(false)});
+	changes.push({type: 0, indices: new Array(coordinates.dimensions).fill(true)});
 
 	// Configures the radio buttons.
 	document.getElementById(`${key}${idx}-frm`).radio.forEach((radio, i) => {
@@ -184,6 +191,7 @@ function configCheckbox(key, idx) {
 		const chk = document.createElement("input");
 		chk.id = `${key}${idx}-chk${i}`;
 		chk.type = "checkbox";
+		chk.checked = true;
 		div.append(chk);
 
 		const label = document.createElement("label");

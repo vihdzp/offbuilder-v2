@@ -33,16 +33,18 @@ function elementNames(n) {
  * can be loaded into Qhull.
  */
 export const exportCoordinates = function() {
+	const newline = coordinates.options.newline;
+
 	// Writes the number of dimensions.
-	let txt = dimensions_nud.value + '\n';
+	let txt = dimensions_nud.value + newline;
 
 	// Writes the number of points.
 	const values = Object.values(coordinates.dictionary);
-	txt += values.length + '\n';
+	txt += values.length + newline;
 
 	// Writes each of the points' coordinates.
 	values.forEach((point) => {
-		txt += point.toString().replaceAll(',', ' ') + '\n';
+		txt += point.toString().replaceAll(',', ' ') + newline;
 	});
 
 	// Saves the file.
@@ -56,7 +58,8 @@ export const exportCoordinates = function() {
  */
 export const importCoordinates = function(event) {
 	// Loads header info, declares some variables.
-	const caret = new Caret(event.target.result),
+	const newline = coordinates.options.newline,
+		caret = new Caret(event.target.result),
 		dim = caret.readNumber(),
 		vertexCount = caret.readNumber(),
 		facetCount = caret.readNumber(),
@@ -219,7 +222,7 @@ export const importCoordinates = function(event) {
 	let txt = '';
 	if(dim != 3)
 		txt += dim;
-	txt += 'OFF\n';
+	txt += 'OFF' + newline;
 
 	// # Vertices, Faces, Edges, ...
 	txt += '# ' + elementNames(0);
@@ -229,7 +232,7 @@ export const importCoordinates = function(event) {
 		txt += ', ' + elementNames(1);
 	for(let i = 3; i < dim; i++)
 		txt += ', ' + elementNames(i);
-	txt += '\n';
+	txt += newline;
 
 	// The corresponding numbers.
 	txt += vertices.length;
@@ -239,22 +242,22 @@ export const importCoordinates = function(event) {
 		txt += ' ' + edges.length;
 	for(let i = 3; i < dim; i++)
 		txt += ' ' + elementList[i].length;
-	txt += '\n\n';
+	txt += newline + newline;
 
 	// Vertices.
-	txt += '# ' + elementNames(0) + '\n';
+	txt += '# ' + elementNames(0) + newline;
 	for(let i = 0; i < vertices.length; i++) {
 		const vertex = vertices[i];
 		txt += vertex[0];
 
 		for(let j = 1; j < dim; j++)
 			txt += ' ' + vertex[j];
-		txt += '\n';
+		txt += newline;
 	}
 
 	// The rest of the elements.
 	for(let d = 2; d < dim; d++) {
-		txt += '\n# ' + elementNames(d) + '\n';
+		txt += newline + '# ' + elementNames(d) + newline;
 		for(let i = 0; i < elementList[d].length; i++) {
 			const el = elementList[d][i];
 			let len = el.length;
@@ -262,7 +265,7 @@ export const importCoordinates = function(event) {
 
 			for(let j = 0; j < len; j++)
 				txt += ' ' + el[j];
-			txt += '\n';
+			txt += newline;
 		}
 	}
 

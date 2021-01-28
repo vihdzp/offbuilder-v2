@@ -8,6 +8,7 @@ export const import_btn = document.getElementById('import-btn');
 export const input_ofd = document.getElementById('input-ofd');
 export const insert_btn = document.getElementById('insert-btn');
 export const in_txt = document.getElementById('in-txt');
+export const newline_chk = document.getElementById('newline-chk');
 export const out_txt = document.getElementById('out-txt');
 export const paren_chk = document.getElementById('paren-chk');
 export const perm_fst = document.getElementById('perm-fst');

@@ -23,7 +23,8 @@ export default class CoordinateList {
 		/** An object containing the configuration of the coordinate list. */
 		this.options = {
 			formatting: 0,
-			parentheses: false
+			parentheses: false,
+			newline: '\n'
 		};
 
 		this.permutations = [];
