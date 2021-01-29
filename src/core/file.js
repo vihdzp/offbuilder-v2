@@ -39,7 +39,7 @@ export const exportCoordinates = function() {
 	let txt = dimensions_nud.value + newline;
 
 	// Writes the number of points.
-	const values = Object.values(coordinates.dictionary);
+	const values = coordinates.list;
 	txt += values.length + newline;
 
 	// Writes each of the points' coordinates.

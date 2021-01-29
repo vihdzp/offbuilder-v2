@@ -18,7 +18,6 @@ export const stepPrism = function(...args) {
 		sines = Array.from({length: n}).map((x,i) => math.sin(i, n));
 
 	// Adds the coordinates.
-	console.log(n);
 	for(let i = 0; i < n; i++) {
 		const coord = [heights[0] * cosines[i], heights[0] * sines[i]];
 

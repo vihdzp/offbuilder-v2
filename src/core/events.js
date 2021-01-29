@@ -18,7 +18,8 @@ import {
 	project_btn,
 	plussigns_btn,
 	plusperms_btn,
-	sign_fst
+	sign_fst,
+	undo_btn
 } from "./domElements.js";
 
 // On coordinate textbox enter.
@@ -228,7 +229,6 @@ function configCheckboxes(key, idx) {
 	const dim = coordinates.dimensions;
 	const changes = key === 'sgn' ? coordinates.signChanges[idx] : coordinates.permutations[idx];
 
-	console.log(idx);
 	if(dim > len)
 		for(let i = len; i < dim; i++) {
 			const chk = document.createElement("input");
@@ -258,3 +258,7 @@ function configCheckboxes(key, idx) {
 			changes.indices.pop();
 		}	
 }
+
+undo_btn.addEventListener('click', () => {
+	coordinates.undo();
+});

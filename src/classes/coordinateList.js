@@ -1,5 +1,43 @@
 import * as Changes from "../core/changes.js";
 
+class DictList {
+	constructor(string) {
+		this.clear();
+		this.string = string;
+	}
+
+	push(entry) {
+		const str = this.string(entry);
+
+		if(!this.dictionary[str]) {
+			this.dictionary[str] = true;
+			this.list.push(entry);
+
+			return str;
+		}
+
+		return "";
+	}
+
+	pop() {
+		const str = this.string(this.list.pop());
+		return delete this.dictionary[str];
+	}
+
+	removeLast(n) {
+		let i;
+		for(i = 0; i < n && this.list.length !== 0; i++)
+			this.pop();
+		
+		return i;
+	}
+
+	clear() {
+		this.dictionary = {};
+		this.list = [];
+	}
+}
+
 /**
  * Wraps around a list of coordinates, and contains methods to add to it.
  */
@@ -18,7 +56,7 @@ export default class CoordinateList {
 
 		/** A dictionary storing keys for all coordinates added, as well as the
 		 * coordinates themselves. */
-		this.dictionary = {};
+		this.dictList = new DictList(x => x.toString());
 
 		/** An object containing the configuration of the coordinate list. */
 		this.options = {
@@ -26,6 +64,8 @@ export default class CoordinateList {
 			parentheses: false,
 			newline: '\n'
 		};
+
+		this.history = [];
 
 		this.permutations = [];
 		this.signChanges = [];
@@ -40,8 +80,9 @@ export default class CoordinateList {
 	 * 
 	 * @param {Point | Point[]} coord A point or array thereof.
 	 */
-	push(coord) {
+	push(coord, undo) {
 		const _this = this;
+		let n = 0;
 
 		iterate(coord, function(coord) {
 			if(coord.length > _this.dimensions)
@@ -51,13 +92,15 @@ export default class CoordinateList {
 					new Array(_this.dimensions - coord.length).fill(0)
 				);
 
-			const str = string(coord);
-			
-			if(_this.dictionary[str] === undefined) {
-				_this.dictionary[str] = coord;
-				_this.textArea.value += str + '\n';
+			const str = _this.dictList.push(coord);
+			if(str !== "") {
+				_this.textArea.value += `(${str})\n`;
+				n++;
 			}
 		});
+
+		if(undo === undefined || undo === true)
+			this.history.push(n);
 	}
 
 	/**
@@ -66,7 +109,7 @@ export default class CoordinateList {
 	 * 
 	 * @param {Point | Point[]} coord A point or array thereof.
 	 */
-	add(coord) {
+	add(coord, undo) {
 		const _this = this;
 
 		_this.signChanges.forEach(sign => {
@@ -116,8 +159,23 @@ export default class CoordinateList {
 					break;
 			}
 		});
+		
+		_this.push(coord, undo);
+	}
 
-		_this.push(coord);
+	undo() {
+		let n = this.history.pop();
+
+		if(n) {
+			n = this.dictList.removeLast(n);
+			const txt = this.textArea.value;
+
+			let idx = txt.length;
+			for(let i = 0; i < n + 1; i++)
+				idx = this.textArea.value.lastIndexOf('\n', idx) - 1
+
+			this.textArea.value = txt.substr(0, idx + 1);
+		}
 	}
 
 	setDimensions(dim) {
@@ -173,7 +231,7 @@ export default class CoordinateList {
 	}
 
 	get list() {
-		return new Array(Object.values(this.dictionary));
+		return this.dictList.list;
 	}
 
 	/**
@@ -222,7 +280,7 @@ export default class CoordinateList {
 	 */
 	clear() {
 		this.textArea.value = '';
-		this.dictionary = {};
+		this.dictList.clear();
 	}
 }
 

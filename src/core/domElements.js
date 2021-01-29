@@ -20,3 +20,4 @@ export const plussigns_btn = document.getElementById('plussigns-btn');
 export const plusperms_btn = document.getElementById('plusperms-btn');
 export const project_btn = document.getElementById('project-btn');
 export const sign_fst = document.getElementById('sign-fst');
+export const undo_btn = document.getElementById('undo-btn');
