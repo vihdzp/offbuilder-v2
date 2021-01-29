@@ -289,6 +289,7 @@ export default class CoordinateList {
 	clear() {
 		this.textArea.value = '';
 		this.dictList.clear();
+		this.history = [];
 	}
 }
 
