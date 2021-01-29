@@ -10,6 +10,8 @@ import {
 	export_btn, 
 	import_btn, 
 	input_ofd, 
+	minussigns_btn,
+	minusperms_btn,
 	newline_chk,
 	paren_chk,
 	perm_fst,
@@ -89,7 +91,7 @@ project_btn.addEventListener('click', () => {
 code_txt.addEventListener('keydown', event => {
 	if(event.key === "Enter" && event.ctrlKey) {
 		try {
-			eval(editor.getValue());
+			eval.call(globalThis, editor.getValue());
 			editor.setValue("");
 		}
 		catch (ex) {
@@ -118,16 +120,25 @@ newline_chk.addEventListener('change', () => {
 	coordinates.options.newline = newline_chk.checked ? '\r\n' : '\n';
 });
 
+// Configures the plus buttons.
 plussigns_btn.addEventListener('click', () => addChange('sgn'));
 plusperms_btn.addEventListener('click', () => addChange('prm'));
 
-// A "change" refers to either a sign change or a permutation.
+/**
+ * Adds a change to the interface and to the coordinates' internals.
+ * A "change" refers to either a sign change or a permutation.
+ * 
+ * @param {string} key Either 'sgn' or 'prm', referring to the type of change.
+ */
 function addChange(key) {
 	// The corresponding type of change.
 	const type = key === 'sgn' ? 'sign changes' : 'permutations';
 
 	// The fieldset to which the change is added.
 	const fst = key === 'sgn' ? sign_fst : perm_fst;
+
+	// The minus button corresponding to this fieldset.
+	const minus_btn = key === 'sgn' ? minussigns_btn : minusperms_btn;
 
 	// The attribute of coordinates that will be modified.
 	const changes = key === 'sgn' ? coordinates.signChanges : coordinates.permutations;
@@ -141,10 +152,12 @@ function addChange(key) {
 	frm.className = "change";
 	fst.appendChild(frm);
 
-	const labelTxt = ["No", "All", "Even", "Odd"];
+	// The radio box labels.
+	const labelTxt = ["All", "Even", "Odd"];
 	if(key === 'sgn')
 		labelTxt.push("Full");
 
+	// Places the radio boxes and their labels.
 	labelTxt.forEach((txt, i) => {
 		const input = document.createElement("input");
 		input.name = "radio";
@@ -161,6 +174,7 @@ function addChange(key) {
 		frm.appendChild(document.createElement("br"));
 	});
 
+	// The checkbox div.
 	const div = document.createElement("div");
 	div.className = "checkboxDiv";
 	div.id = `${key}${idx}-div`;
@@ -179,8 +193,35 @@ function addChange(key) {
 
 	// Configures the checkboxes.	
 	configCheckboxes(key, idx);
+	minus_btn.disabled = changes.length === 0;
 }
 
+// Configures the minus buttons.
+minussigns_btn.addEventListener('click', () => deleteChange('sgn'));
+minusperms_btn.addEventListener('click', () => deleteChange('prm'));
+
+function deleteChange(key) {	
+	// The fieldset to which the change is removed.
+	const fst = key === 'sgn' ? sign_fst : perm_fst;
+
+	// The minus button corresponding to this fieldset.
+	const minus_btn = key === 'sgn' ? minussigns_btn : minusperms_btn;
+
+	// The attribute of coordinates that will be modified.
+	const changes = key === 'sgn' ? coordinates.signChanges : coordinates.permutations;
+
+	// Does the actual removing.
+	changes.pop();
+	fst.removeChild(fst.lastChild);	
+	minus_btn.disabled = changes.length === 0;
+}
+
+/**
+ * Configures a set of checkboxes so that they modify the correct change.
+ * 
+ * @param {string} key Either 'sgn' or 'prm', referring to the type of change.
+ * @param {string} idx 
+ */
 function configCheckboxes(key, idx) {	
 	const div = document.getElementById(`${key}${idx}-div`);
 	const len = div.children.length / 2;

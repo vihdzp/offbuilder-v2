@@ -1,3 +1,5 @@
+// Contains a lot of HTML elements as constants.
+
 export const clear_btn = document.getElementById('clear-btn');
 export const code_txt = document.getElementById('code-txt');
 export const copy_btn = document.getElementById('copy-btn');
@@ -8,6 +10,8 @@ export const import_btn = document.getElementById('import-btn');
 export const input_ofd = document.getElementById('input-ofd');
 export const insert_btn = document.getElementById('insert-btn');
 export const in_txt = document.getElementById('in-txt');
+export const minussigns_btn = document.getElementById('minussigns-btn');
+export const minusperms_btn = document.getElementById('minusperms-btn');
 export const newline_chk = document.getElementById('newline-chk');
 export const out_txt = document.getElementById('out-txt');
 export const paren_chk = document.getElementById('paren-chk');

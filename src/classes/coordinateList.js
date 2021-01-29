@@ -77,16 +77,20 @@ export default class CoordinateList {
 
 			switch(sign.type) {
 				//All
-				case 1:
+				case 0:
 					coord = Changes.allSignChanges(coord, indices);
 					break;
 				//Even
-				case 2:
+				case 1:
 					coord = Changes.evenSignChanges(coord, indices);
 					break;
 				//Odd
-				case 3:
+				case 2:
 					coord = Changes.oddSignChanges(coord, indices);
+					break;
+				//Full
+				case 3:
+					coord = Changes.fullSignChanges(coord, indices);
 					break;
 			}
 		});
@@ -99,15 +103,15 @@ export default class CoordinateList {
 
 			switch(perm.type) {
 				//All
-				case 1:
+				case 0:
 					coord = Changes.allPermutations(coord, indices);
 					break;
 				//Even
-				case 2:
+				case 1:
 					coord = Changes.evenPermutations(coord, indices);
 					break;
 				//Odd
-				case 3:
+				case 2:
 					coord = Changes.oddPermutations(coord, indices);
 					break;
 			}
@@ -168,6 +172,10 @@ export default class CoordinateList {
 		}
 	}
 
+	get list() {
+		return new Array(Object.values(this.dictionary));
+	}
+
 	/**
 	 * The character to use as a coordinate separator.
 	 * 
@@ -201,7 +209,7 @@ export default class CoordinateList {
 			}
 
 			// Evaluates each coordinate, returns the resulting point.
-			return eval('[' + str.replaceAll(c, ',') + '];');
+			return eval.call(globalThis, '[' + str.replaceAll(c, ',') + '];');
 		}
 		catch(ex) {
 			alert(ex);
