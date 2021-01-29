@@ -55,8 +55,8 @@ function _doubleStepPrism(gyro, args) {
 	
 	// Precalculates cosines and sines.
 	const n = shape[0], 
-		cosines = Array.from({length: n}).map((x,i) => math.cos(i, n)),
-		sines = Array.from({length: n}).map((x,i) => math.sin(i, n));
+		cosines = Array.from({length: n}).map((_, i) => math.cos(i, n)),
+		sines = Array.from({length: n}).map((_, i) => math.sin(i, n));
 
 	// Adds the coordinates.
 	for(let i = 0; i < n; i++) {
