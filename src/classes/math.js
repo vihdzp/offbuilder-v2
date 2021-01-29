@@ -17,7 +17,7 @@ const tau = decimal.acos(-1).times(2);
  * @param {number} d The denominator of the fraction.
  * @returns {number} cos(2π * n / d).
  */
-export const cos = function(n, c) {
+export const cos = function(n, d) {
     const res = decimal.cos(tau.times(n).div(d)).toNumber();
     return Math.abs(res) < Number.EPSILON ? 0 : res;
 }
@@ -30,7 +30,7 @@ export const cos = function(n, c) {
  * @param {number} d The denominator of the fraction.
  * @returns {number} sin(2π * n / d).
  */
-export const sin = function(n, c) {
+export const sin = function(n, d) {
     const res = decimal.sin(tau.times(n).div(d)).toNumber();
     return Math.abs(res) < Number.EPSILON ? 0 : res;
 }
