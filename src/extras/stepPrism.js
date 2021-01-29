@@ -1,4 +1,4 @@
-import coordinates from "../core/coordinates.js";
+import * as math from "../classes/math.js";
 
 /**
  * Builds a step with a given set of heights.
@@ -14,9 +14,8 @@ export const stepPrism = function(...args) {
 	
 	// Precalculates cosines and sines.
 	const n = shape[0], 
-		alpha = 2 * Math.PI / n,
-		cosines = Array.from({length: n}).map((x,i) => Math.cos(alpha * i)),
-		sines = Array.from({length: n}).map((x,i) => Math.sin(alpha * i));
+		cosines = Array.from({length: n}).map((x,i) => math.cos(i, n)),
+		sines = Array.from({length: n}).map((x,i) => math.sin(i, n));
 
 	// Adds the coordinates.
 	console.log(n);
@@ -56,9 +55,8 @@ function _doubleStepPrism(gyro, args) {
 	
 	// Precalculates cosines and sines.
 	const n = shape[0], 
-		alpha = 2 * Math.PI / n,
-		cosines = Array.from({length: n}).map((x,i) => Math.cos(alpha * i)),
-		sines = Array.from({length: n}).map((x,i) => Math.sin(alpha * i));
+		cosines = Array.from({length: n}).map((x,i) => math.cos(i, n)),
+		sines = Array.from({length: n}).map((x,i) => math.sin(i, n));
 
 	// Adds the coordinates.
 	for(let i = 0; i < n; i++) {
