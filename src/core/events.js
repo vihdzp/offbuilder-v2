@@ -1,3 +1,7 @@
+/**
+ * @file Defines all of the events in the interface.
+ */
+
 import coordinates from "./coordinates.js";
 import { importCoordinates, exportCoordinates } from "./file.js";
 import { 

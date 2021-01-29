@@ -1,4 +1,6 @@
-// Contains a lot of HTML elements as constants.
+/**
+ * @file Contains a lot of HTML elements as constants.
+ */
 
 export const clear_btn = document.getElementById('clear-btn');
 export const code_txt = document.getElementById('code-txt');
