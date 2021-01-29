@@ -18,6 +18,8 @@ import {
 	project_btn,
 	plussigns_btn,
 	plusperms_btn,
+	scale_btn,
+	scale_txt,
 	sign_fst,
 	undo_btn
 } from "./domElements.js";
@@ -26,6 +28,13 @@ import {
 in_txt.addEventListener('keydown', event => {
 	if(event.key !== "Enter") return;
 	insert_btn.click();
+	event.preventDefault();
+});
+
+// On coordinate textbox enter.
+scale_txt.addEventListener('keydown', event => {
+	if(event.key !== "Enter") return;
+	scale_btn.click();
 	event.preventDefault();
 });
 
@@ -262,3 +271,17 @@ function configCheckboxes(key, idx) {
 undo_btn.addEventListener('click', () => {
 	coordinates.undo();
 });
+
+scale_btn.addEventListener('click', () => {
+	try {
+		const scale = eval.call(globalThis, scale_txt.value);
+
+		if(!(isNaN(scale) || scale === 1)) {
+			coordinates.scale(scale);
+			scale_txt.value = '1';
+		}
+	}
+	catch(ex) {
+		alert(ex);
+	}
+})

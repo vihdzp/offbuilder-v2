@@ -80,7 +80,7 @@ export default class CoordinateList {
 	 * 
 	 * @param {Point | Point[]} coord A point or array thereof.
 	 */
-	push(coord, undo) {
+	push(coord) {
 		const _this = this;
 		let n = 0;
 
@@ -99,7 +99,7 @@ export default class CoordinateList {
 			}
 		});
 
-		if(undo === undefined || undo === true)
+		if(n !== 0)
 			this.history.push(n);
 	}
 
@@ -109,7 +109,7 @@ export default class CoordinateList {
 	 * 
 	 * @param {Point | Point[]} coord A point or array thereof.
 	 */
-	add(coord, undo) {
+	add(coord) {
 		const _this = this;
 
 		_this.signChanges.forEach(sign => {
@@ -160,7 +160,7 @@ export default class CoordinateList {
 			}
 		});
 		
-		_this.push(coord, undo);
+		_this.push(coord);
 	}
 
 	undo() {
@@ -176,6 +176,14 @@ export default class CoordinateList {
 
 			this.textArea.value = txt.substr(0, idx + 1);
 		}
+	}	
+
+	scale(value) {
+		const listClone = this.list.map(x => [...x]);
+		this.clear();
+
+		for(let i = 0; i < listClone.length; i++)
+			this.push(listClone[i].map(x => x * value));
 	}
 
 	setDimensions(dim) {

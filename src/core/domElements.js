@@ -19,5 +19,7 @@ export const perm_fst = document.getElementById('perm-fst');
 export const plussigns_btn = document.getElementById('plussigns-btn');
 export const plusperms_btn = document.getElementById('plusperms-btn');
 export const project_btn = document.getElementById('project-btn');
+export const scale_btn = document.getElementById('scale-btn');
+export const scale_txt = document.getElementById('scale-txt');
 export const sign_fst = document.getElementById('sign-fst');
 export const undo_btn = document.getElementById('undo-btn');
