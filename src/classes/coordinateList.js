@@ -1,6 +1,16 @@
 import * as Changes from "../core/changes.js";
 
-class DictList {
+/**
+ * A data structure that contains both a pile to add and remove objects, and a
+ * dictionary to avoid adding duplicates. Is used by the CoordinateList class. 
+ */
+class DictPile {
+	/**
+	 * Constructor for the DictPile class.
+	 * 
+	 * @param {unknown => string} string Converts any passed object into a 
+	 * string. Should be an injective function.
+	 */
 	constructor(string) {
 		this.clear();
 		this.string = string;
@@ -56,7 +66,7 @@ export default class CoordinateList {
 
 		/** A dictionary storing keys for all coordinates added, as well as the
 		 * coordinates themselves. */
-		this.dictList = new DictList(x => x.toString());
+		this.dictPile = new DictPile(x => x.toString());
 
 		/** An object containing the configuration of the coordinate list. */
 		this.options = {
@@ -81,18 +91,17 @@ export default class CoordinateList {
 	 * @param {Point | Point[]} coord A point or array thereof.
 	 */
 	push(coord) {
+		const dim = coord[0] instanceof Array ? coord[0].length : coord.length;
+		if(dim !== this.dimensions) {
+			alert(`Expected ${this.dimensions} coordinates, got ${dim}.`);
+			return;
+		}
+
 		const _this = this;
 		let n = 0;
 
 		iterate(coord, function(coord) {
-			if(coord.length > _this.dimensions)
-				coord = coord.slice(0, _this.dimensions)
-			else if(coord.length < _this.dimensions)
-				coord = coord.concat(
-					new Array(_this.dimensions - coord.length).fill(0)
-				);
-
-			const str = _this.dictList.push(coord);
+			const str = _this.dictPile.push(coord);
 			if(str !== "") {
 				_this.textArea.value += `(${str})\n`;
 				n++;
@@ -110,6 +119,12 @@ export default class CoordinateList {
 	 * @param {Point | Point[]} coord A point or array thereof.
 	 */
 	add(coord) {
+		const dim = coord[0] instanceof Array ? coord[0].length : coord.length;
+		if(dim !== this.dimensions) {
+			alert(`Expected ${this.dimensions} coordinates, got ${dim}.`);
+			return;
+		}
+		
 		const _this = this;
 
 		_this.signChanges.forEach(sign => {
@@ -167,14 +182,14 @@ export default class CoordinateList {
 		let n = this.history.pop();
 
 		if(n) {
-			n = this.dictList.removeLast(n);
+			n = this.dictPile.removeLast(n);
 			const txt = this.textArea.value;
 
 			let idx = txt.length;
 			for(let i = 0; i < n + 1; i++)
 				idx = this.textArea.value.lastIndexOf('\n', idx) - 1
 
-			this.textArea.value = txt.substr(0, idx + 1);
+			this.textArea.value = txt.substr(0, idx + 2);
 		}
 	}	
 
@@ -239,7 +254,7 @@ export default class CoordinateList {
 	}
 
 	get list() {
-		return this.dictList.list;
+		return this.dictPile.list;
 	}
 
 	/**
@@ -288,7 +303,7 @@ export default class CoordinateList {
 	 */
 	clear() {
 		this.textArea.value = '';
-		this.dictList.clear();
+		this.dictPile.clear();
 		this.history = [];
 	}
 }
