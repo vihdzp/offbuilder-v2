@@ -9,7 +9,7 @@ export const tetswirl = function(n) {
         const cos1 = math.cos(k, 2 * n),
             sin1 = math.sin(k, 2 * n);
 
-        const c = [0, 0, cos1, sin1];
+        const c = [0, 0, sin1, cos1];
         coords.push(c, c.map(neg));
         
         const k1 = Math.sqrt(6) / 3, k2 = Math.sqrt(3) / 3;
