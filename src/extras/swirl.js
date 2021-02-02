@@ -1,9 +1,9 @@
 import * as math from "../classes/math.js";
 
-export const tetswirl = function(n) {
+const neg = x => -x;
 
+export const tetswirl = function(n) {
     const coords = [];
-    const neg = x => -x;
 
     for(let k = 0; k < n; k++) {
         const cos1 = math.cos(k, 2 * n),
@@ -25,3 +25,11 @@ export const tetswirl = function(n) {
     return coords;
 }
 globalThis.tetswirl = tetswirl;
+
+/*export const cubeswirl = function(n) {
+    const coords = [];
+
+    for(let k = 0; k < 2 * n; k++) {
+        
+    }
+}*/

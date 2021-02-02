@@ -202,7 +202,7 @@ function signChanges(coord, indices, parity) {
 	return applyConcat(coord, function(c) {
 		c = [...c];
 
-		const res = [[...c]];
+		const res = [];
 		const _parity = parity.clone();
 		const newIndices = [];
 
@@ -211,14 +211,9 @@ function signChanges(coord, indices, parity) {
 				newIndices.push(indices[i]);
 				
 		const n = newIndices.length - ((_parity.get() === 'all') ? 0 : 1);
-		for(let i = 1; i < 2 ** n; i++) {
+				
+		for(let i = 1; i <= 2 ** n; i++) {
 			let j = 1, k = 1;
-
-			while(i % j === 0) {
-				c[newIndices[n - k]] *= -1;
-				_parity.flip();
-				j *= 2; k++;
-			}
 
 			if(_parity.get() === 'odd') {
 				c[newIndices[n]] *= -1;
@@ -226,6 +221,12 @@ function signChanges(coord, indices, parity) {
 			}
 
 			res.push([...c]);
+
+			while(i % j === 0) {
+				c[newIndices[n - k]] *= -1;
+				_parity.flip();
+				j *= 2; k++;
+			}
 		}
 
 		return res;
