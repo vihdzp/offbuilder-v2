@@ -56,6 +56,8 @@ export const cubeswirl = function(n) {
 globalThis.cubeswirl = cubeswirl;
 
 export const prismswirl = function(m, n, a, b) {
+    a ||= 1; b ||= 1;
+    
     const coords = [];
 
     for(let k = 0; k < m * n; k++) {
@@ -74,3 +76,27 @@ export const prismswirl = function(m, n, a, b) {
     return coords;
 }
 globalThis.prismswirl = prismswirl;
+
+export const antiprismswirl = function(m, n, a, b) {
+    a ||= 1; b ||= 1;
+    
+    const coords = [];
+
+    for(let k = 0; k < m * n; k++) {
+        const cos = math.cos(k, m * n),
+            sin = math.sin(k, m * n);
+
+        for(let i = 0; i < m; i++) {
+            const cos1 = math.cos(k + i * n, m * n),
+                sin1 = math.sin(k + i * n, m * n),
+                cos2 = math.cos(2 * k + (2 * i + 1) * n, 2 * m * n),
+                sin2 = math.sin(2 * k + (2 * i + 1) * n, 2 * m * n);
+
+            coords.push([a * cos1, a * sin1, b * cos, b * sin]);
+            coords.push([b * cos2, b * sin2, a * cos, a * sin]);
+        }
+    }
+
+    return coords;
+}
+globalThis.antiprismswirl = antiprismswirl;
