@@ -58,7 +58,7 @@ globalThis.cubeswirl = cubeswirl;
 export const prismswirl = function(m, n, a, b) {
     const coords = [];
 
-    for(let k = 0; k < m * n - 1; k++) {
+    for(let k = 0; k < m * n; k++) {
         const cos = math.cos(k, m * n),
             sin = math.sin(k, m * n);
 
