@@ -54,3 +54,23 @@ export const cubeswirl = function(n) {
     return coords;
 }
 globalThis.cubeswirl = cubeswirl;
+
+export const prismswirl = function(m, n, a, b) {
+    const coords = [];
+
+    for(let k = 0; k < m * n - 1; k++) {
+        const cos = math.cos(k, m * n),
+            sin = math.sin(k, m * n);
+
+        for(let i = 0; i < m; i++) {
+            const cos_ = math.cos(k + i * n, m * n),
+                sin_ = math.sin(k + i * n, m * n);
+
+            coords.push([a * cos_, a * sin_, b * cos, b * sin]);
+            coords.push([b * cos_, b * sin_, a * cos, a * sin]);
+        }
+    }
+
+    return coords;
+}
+globalThis.prismswirl = prismswirl;
