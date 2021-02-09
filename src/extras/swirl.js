@@ -55,6 +55,35 @@ export const cubeswirl = function(n) {
 }
 globalThis.cubeswirl = cubeswirl;
 
+export const octswirl = function(n) {
+    const coords = [];
+    const k1 = Math.SQRT2;
+
+    for(let k = 0; k < 2 * n; k++) {
+        const cos = math.cos(k, 4 * n),
+            sin = math.sin(k, 4 * n),
+            cos1 = math.cos(2 * k + n, 8 * n),
+            sin1 = math.sin(2 * k + n, 8 * n);
+
+        const c1 = [cos, sin, 0, 0];
+            coords.push(c1, c1.map(neg));
+            
+        const c2 = [0, 0, cos, sin];
+            coords.push(c2, c2.map(neg));
+
+        for(let i = 0; i < 4; i++) {
+            const cos2 = math.cos(2 * k + (2 * i + 1) * n, 8 * n),
+                sin2 = math.sin(2 * k + (2 * i + 1) * n, 8 * n);
+
+            const c1 = [cos2 / k1, sin2 / k1, cos1 / k1, sin1 / k1];
+            coords.push(c1, c1.map(neg));
+        }
+    }
+
+    return coords;
+}
+globalThis.octswirl = octswirl;
+
 export const prismswirl = function(m, n, a, b) {
     a ||= 1; b ||= 1;
     
