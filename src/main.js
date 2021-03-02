@@ -7,3 +7,5 @@ import "./extras/swirl.js";
 globalThis.sqrt = Math.sqrt;
 globalThis.sin = Math.sin;
 globalThis.cos = Math.cos;
+globalThis.sinF = math.sin;
+globalThis.cosF = math.cos;
