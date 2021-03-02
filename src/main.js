@@ -1,4 +1,4 @@
-import * as math from "../classes/math.js";
+import * as math from "./classes/math.js";
 import "./core/events.js";
 import "./extras/stepPrism.js";
 import "./extras/polygon.js";
