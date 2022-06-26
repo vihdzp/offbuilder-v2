@@ -1,5 +1,5 @@
 # What is OFFBuilder?
-[OFFBuilder](https://officialurl.github.io/offbuilder-v2/) generates OFF files for convex polytopes from their coordinates. It\'s meant for use with [Stella](https://www.software3d.com/Stella.php) and [Miratope](https://github.com/OfficialURL/miratope). Runs (mostly) in the browser.
+[OFFBuilder](https://vihdzp.github.io/offbuilder-v2/) generates OFF files for convex polytopes from their coordinates. It\'s meant for use with [Stella](https://www.software3d.com/Stella.php) and [Miratope](https://github.com/OfficialURL/miratope). Runs (mostly) in the browser.
 
 For a quick explanation of what an OFF file is, see the [Miratope readme](https://github.com/OfficialURL/miratope#where-do-i-get-these-off-files).
 
