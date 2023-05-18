@@ -70,4 +70,4 @@ import "./extras/square.js";
 If your extension has the potential to be useful to other users, be sure to add it to the repository.
 
 ## Credits
-The core application was coded by URL. As dependencies, it uses [ace.js](https://github.com/ajaxorg/ace), [decimal.js](https://github.com/MikeMcl/decimal.js/), and [svd.js](https://github.com/danilosalvati/svd-js), all under the MIT license.
+The core application was coded by @vihdzp. As dependencies, it uses [ace.js](https://github.com/ajaxorg/ace), [decimal.js](https://github.com/MikeMcl/decimal.js/), and [svd.js](https://github.com/danilosalvati/svd-js), all under the MIT license.
