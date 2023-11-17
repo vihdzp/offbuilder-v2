@@ -1,232 +1,239 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="UTF-8">
-		<title>OFFBuilder</title>
-		<link rel="icon" href="public/offbuilder.ico">
 
-		<style>
-			/* Logical sizing, common font for the application. */
-			* {
-				box-sizing:border-box;
-				font-family:sans-serif;
-			}
+<head>
+	<meta charset="UTF-8">
+	<title>OFFBuilder</title>
+	<link rel="icon" href="public/offbuilder.ico">
 
-			/* Uses a monospace font for the code editor. */
-			.ace_editor * {
-				font-family: monospace;
-			}
+	<style>
+		/* Logical sizing, common font for the application. */
+		* {
+			box-sizing: border-box;
+			font-family: sans-serif;
+		}
 
-			/* The main div contains the entire application, except the buttons
+		/* Uses a monospace font for the code editor. */
+		.ace_editor * {
+			font-family: monospace;
+		}
+
+		/* The main div contains the entire application, except the buttons
 			 * on the bottom. */
-			#main-div {
-				width:calc(100vw - 10px);
-				height:calc(100vh - 55px);
-				margin:0;
-			}
+		#main-div {
+			width: calc(100vw - 10px);
+			height: calc(100vh - 55px);
+			margin: 0;
+		}
 
-			/* Centers and configures the "Coordinates:" label. */
-			#coord-lbl {
-				text-align:center;
-				display:block;
-				font-size:16px;
-				font-weight:bold;
-			}
+		/* Centers and configures the "Coordinates:" label. */
+		#coord-lbl {
+			text-align: center;
+			display: block;
+			font-size: 16px;
+			font-weight: bold;
+		}
 
-			/* Centers and configures the "Output" and "Code" label. */
-			.secondary-lbl {
-				height:20px;
-				text-align:center;
-				display:block;
-				font-size:14px;
-				font-weight:bold;
-			}
+		/* Centers and configures the "Output" and "Code" label. */
+		.secondary-lbl {
+			height: 20px;
+			text-align: center;
+			display: block;
+			font-size: 14px;
+			font-weight: bold;
+		}
 
-			/* Aligns every new div on the main div to the left. */
-			#main-div>div {
-				float:left;
-			}
+		/* Aligns every new div on the main div to the left. */
+		#main-div>div {
+			float: left;
+		}
 
-			/* Configures the div to input coordinates. */
-			#input-div {
-				width:100%;
-				height:60px;
-				padding:5px 15px 0 10px;
-			}
+		/* Configures the div to input coordinates. */
+		#input-div {
+			width: 100%;
+			height: 60px;
+			padding: 5px 15px 0 10px;
+		}
 
-			/* Configures the "Coordinates:" textbox. */
-			#in-txt {
-				width:100%;
-				height:20px;
-				text-align:center;
-			}
+		/* Configures the "Coordinates:" textbox. */
+		#in-txt {
+			width: 100%;
+			height: 20px;
+			text-align: center;
+		}
 
-			/* Configure the div with the permutations and sign changes. */
-			#options-div {
-				width:30%;
-				height:calc(100% - 60px);
-				overflow-y:scroll;
-				overflow-x:hidden;
-				padding:0;
-			}
+		/* Configure the div with the permutations and sign changes. */
+		#options-div {
+			width: 30%;
+			height: calc(100% - 60px);
+			overflow-y: scroll;
+			overflow-x: hidden;
+			padding: 0;
+		}
 
-			/* Adds spaces between radio buttons and checkboxes. */
-			input[type="radio"], input[type="checkbox"] {
-				margin: 7px 0 7px 0;
-			}
+		/* Adds spaces between radio buttons and checkboxes. */
+		input[type="radio"],
+		input[type="checkbox"] {
+			margin: 7px 0 7px 0;
+		}
 
-			.checkboxDiv {
-				overflow-x:auto;
-				width:calc(30vw - 80px);
-				white-space:nowrap;
-				border:1px solid gray;
-				padding:2px 5px 2px 5px;
-			}
+		.checkboxDiv {
+			overflow-x: auto;
+			width: calc(30vw - 80px);
+			white-space: nowrap;
+			border: 1px solid gray;
+			padding: 2px 5px 2px 5px;
+		}
 
-			/* Configures the + and × buttons. */
-			.squareBtn {
-				height:23px;
-				width:23px;
-				font-size:14px;
-				padding:0;
-			}
+		/* Configures the + and × buttons. */
+		.squareBtn {
+			height: 23px;
+			width: 23px;
+			font-size: 14px;
+			padding: 0;
+		}
 
-			/* Configures the "Output" and "Code" div. */
-			#textarea-div {
-				width:70%;
-				height:calc(100% - 55px);
-				padding:10px;
-			}
+		/* Configures the "Output" and "Code" div. */
+		#textarea-div {
+			width: 70%;
+			height: calc(100% - 55px);
+			padding: 10px;
+		}
 
-			/* Configures the "Output" and "Code" divs. */
-			#output-div, #code-div {
-				width:100%;
-				height:50%;
-			}
+		/* Configures the "Output" and "Code" divs. */
+		#output-div,
+		#code-div {
+			width: 100%;
+			height: 50%;
+		}
 
-			textarea {
-				position:relative;
-				width:100%;
-				height:calc(100% - 30px);
-				resize:none
-			}
+		textarea {
+			position: relative;
+			width: 100%;
+			height: calc(100% - 30px);
+			resize: none
+		}
 
-			#code-txt {
-				position:relative;
-				width:100%;
-				height:calc(100% - 30px);
-				border:1px solid gray;
-			}
+		#code-txt {
+			position: relative;
+			width: 100%;
+			height: calc(100% - 30px);
+			border: 1px solid gray;
+		}
 
-			.change {
-				border:1px solid gray;
-				padding:10px;
-				margin:5px 0px 5px 0px;
-			}
+		.change {
+			border: 1px solid gray;
+			padding: 10px;
+			margin: 5px 0px 5px 0px;
+		}
 
-			#buttons-div>input {
-				font-size:16px;
-				width:80px;
-				margin:10px 5px 0 5px;
-			}
-		</style>
-	</head>
+		#buttons-div>input {
+			font-size: 16px;
+			width: 80px;
+			margin: 10px 5px 0 5px;
+		}
+	</style>
+</head>
 
-	<body>
-		<a id="dl-a" href=""></a>
+<body>
+	<a id="dl-a" href=""></a>
 
-		<!-- Main div, contains everything but the buttons. -->
-		<div id="main-div">
-			<!-- Input div, contains the coordinate textbox. -->
-			<div id="input-div">
-				<label for="in-txt" id="coord-lbl">Coordinates:</label>
-				<input type="text" id="in-txt" />
-			</div>
-
-			<!-- Options div, the entire left panel. -->
-			<div id="options-div">
-				<!-- Dimensions fieldset. -->
-				<fieldset>
-					<legend>Dimensions</legend>
-
-					<input type="number" min="1" max="100" value="4" id="dimensions-nud" />
-
-					<input type="button" style="float:right;" id="project-btn" />
-				</fieldset>
-
-				<!-- Scale fieldset. -->
-				<fieldset>
-					<legend>Scale</legend>
-
-					<input type="text" id="scale-txt" placeholder="1" />
-
-					<input type="button" value="Apply" style="float:right;" id="scale-btn" />
-				</fieldset>
-
-				<!-- Formatting fieldset. -->
-				<fieldset>
-					<legend>Formatting</legend>
-
-					<form name="formatting">
-						<input name="radio" type="radio" id="spaces-rad" checked /><label for="spaces-rad"> Separate by spaces</label><br />
-
-						<input name="radio" type="radio" id="commas-rad" /><label for="commas-rad"> Separate by commas</label><br />
-
-						<input type="checkbox" id="paren-chk" /><label for="paren-chk"> Enclosing parentheses</label><br />
-						
-						<input type="checkbox" id="newline-chk" /><label for="newline-chk"> Use Windows line ending</label><br />
-					</form>
-				</fieldset>
-
-				<fieldset id = "sign-fst">
-					<legend><span style="width:100px;display:inline-block;">Sign changes</span>
-						<input type="button" class="squareBtn" value="+" id="plussigns-btn" />
-						<input type="button" class="squareBtn" value="×" id="minussigns-btn" disabled />
-					</legend>					
-				</fieldset>
-
-				<fieldset id = "perm-fst">
-					<legend><span style="width:100px;display:inline-block;">Permutations</span>						
-						<input type="button" class="squareBtn" value="+" id="plusperms-btn" />
-						<input type="button" class="squareBtn" value="×" id="minusperms-btn" disabled />
-					</legend>
-				</fieldset>
-			</div>
-
-			<div id="textarea-div">
-				<div id="output-div">
-					<label for="out-txt" class="secondary-lbl">Output</label>
-					<textarea id="out-txt" readonly></textarea>
-				</div>
-
-				<div id="code-div">
-					<label for="code-txt" class="secondary-lbl">Code</label>
-					<div id="code-txt"></div>
-				</div>
-			</div>
+	<!-- Main div, contains everything but the buttons. -->
+	<div id="main-div">
+		<!-- Input div, contains the coordinate textbox. -->
+		<div id="input-div">
+			<label for="in-txt" id="coord-lbl">Coordinates:</label>
+			<input type="text" id="in-txt" />
 		</div>
 
-		<div id="buttons-div">
-			<input type="button" id="clear-btn" value="Clear" />
-			<input type="button" id="undo-btn" value="Undo" />
-			<input type="button" id="insert-btn" style="float:right" value="Insert"/>
-			<input type="button" id="copy-btn" style="float:right" value="Copy"/>
-			<input type="button" id="import-btn" style="float:right" value="Import"/>
-			<input type="button" id="export-btn" style="float:right" value="Export"/>
+		<!-- Options div, the entire left panel. -->
+		<div id="options-div">
+			<!-- Dimensions fieldset. -->
+			<fieldset>
+				<legend>Dimensions</legend>
+
+				<input type="number" min="1" max="100" value="4" id="dimensions-nud" />
+
+				<input type="button" style="float:right;" id="project-btn" />
+			</fieldset>
+
+			<!-- Scale fieldset. -->
+			<fieldset>
+				<legend>Scale</legend>
+
+				<input type="text" id="scale-txt" placeholder="1" />
+
+				<input type="button" value="Apply" style="float:right;" id="scale-btn" />
+			</fieldset>
+
+			<!-- Formatting fieldset. -->
+			<fieldset>
+				<legend>Formatting</legend>
+
+				<form name="formatting">
+					<input name="radio" type="radio" id="spaces-rad" checked /><label for="spaces-rad"> Separate by
+						spaces</label><br />
+
+					<input name="radio" type="radio" id="commas-rad" /><label for="commas-rad"> Separate by
+						commas</label><br />
+
+					<input type="checkbox" id="paren-chk" /><label for="paren-chk"> Enclosing parentheses</label><br />
+
+					<input type="checkbox" id="newline-chk" /><label for="newline-chk"> Use Windows line
+						ending</label><br />
+				</form>
+			</fieldset>
+
+			<fieldset id="sign-fst">
+				<legend><span style="width:100px;display:inline-block;">Sign changes</span>
+					<input type="button" class="squareBtn" value="+" id="plussigns-btn" />
+					<input type="button" class="squareBtn" value="×" id="minussigns-btn" disabled />
+				</legend>
+			</fieldset>
+
+			<fieldset id="perm-fst">
+				<legend><span style="width:100px;display:inline-block;">Permutations</span>
+					<input type="button" class="squareBtn" value="+" id="plusperms-btn" />
+					<input type="button" class="squareBtn" value="×" id="minusperms-btn" disabled />
+				</legend>
+			</fieldset>
 		</div>
 
-		<input id="input-ofd" type="file" style="position: fixed; top: -100em"/>
+		<div id="textarea-div">
+			<div id="output-div">
+				<label for="out-txt" class="secondary-lbl">Output</label>
+				<textarea id="out-txt" readonly></textarea>
+			</div>
 
-		<!-- Loads ace. -->
-		<script src="src/ace/ace.js"></script>
-		<script src="src/ace/mode-javascript.js"></script>
-		<script src="src/ace/worker-javascript.js"></script>
-		<script>
-			const editor = ace.edit("code-txt");
-			const JavaScriptMode = ace.require("ace/mode/javascript").Mode;
-			editor.session.setMode(new JavaScriptMode());
-		</script>
+			<div id="code-div">
+				<label for="code-txt" class="secondary-lbl">Code</label>
+				<div id="code-txt"></div>
+			</div>
+		</div>
+	</div>
 
-		<script type="module" src="src/main.js"></script>
-	</body>
+	<div id="buttons-div">
+		<input type="button" id="clear-btn" value="Clear" />
+		<input type="button" id="undo-btn" value="Undo" />
+		<input type="button" id="insert-btn" style="float:right" value="Insert" />
+		<input type="button" id="copy-btn" style="float:right" value="Copy" />
+		<input type="button" id="import-btn" style="float:right" value="Import" />
+		<input type="button" id="export-btn" style="float:right" value="Export" />
+	</div>
+
+	<input id="input-ofd" type="file" style="position: fixed; top: -100em" />
+
+	<!-- Loads ace. -->
+	<script src="src/ace/ace.js"></script>
+	<script src="src/ace/mode-javascript.js"></script>
+	<script src="src/ace/worker-javascript.js"></script>
+	<script>
+		const editor = ace.edit("code-txt");
+		const JavaScriptMode = ace.require("ace/mode/javascript").Mode;
+		editor.session.setMode(new JavaScriptMode());
+	</script>
+
+	<script type="module" src="src/main.js"></script>
+</body>
+
 </html>
