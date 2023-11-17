@@ -4,16 +4,16 @@
 
 import coordinates from "./coordinates.js";
 import { importCoordinates, exportCoordinates } from "./file.js";
-import { 
-	in_txt, 
-	insert_btn, 
-	clear_btn, 
-	code_txt, 
-	copy_btn, 
-	dimensions_nud, 
-	export_btn, 
-	import_btn, 
-	input_ofd, 
+import {
+	in_txt,
+	insert_btn,
+	clear_btn,
+	code_txt,
+	copy_btn,
+	dimensions_nud,
+	export_btn,
+	import_btn,
+	input_ofd,
 	minussigns_btn,
 	minusperms_btn,
 	newline_chk,
@@ -30,14 +30,14 @@ import {
 
 // On coordinate textbox enter.
 in_txt.addEventListener('keydown', event => {
-	if(event.key !== "Enter") return;
+	if (event.key !== "Enter") return;
 	insert_btn.click();
 	event.preventDefault();
 });
 
 // On coordinate textbox enter.
 scale_txt.addEventListener('keydown', event => {
-	if(event.key !== "Enter") return;
+	if (event.key !== "Enter") return;
 	scale_btn.click();
 	event.preventDefault();
 });
@@ -71,7 +71,7 @@ import_btn.addEventListener('click', () => {
 // On file load.
 input_ofd.addEventListener('change', event => {
 	const file = event.target.files[0];
-	if(!file) return;
+	if (!file) return;
 
 	const fr = new FileReader(file);
 	fr.onload = importCoordinates;
@@ -85,10 +85,10 @@ function dimChange() {
 	coordinates.setDimensions(value);
 	project_btn.value = `Project to ${value - 1}D`;
 
-	for(let i = 0; i < coordinates.signChanges.length; i++)
+	for (let i = 0; i < coordinates.signChanges.length; i++)
 		configCheckboxes('sgn', i);
-	
-	for(let i = 0; i < coordinates.permutations.length; i++)
+
+	for (let i = 0; i < coordinates.permutations.length; i++)
 		configCheckboxes('prm', i);
 }
 dimensions_nud.addEventListener('input', dimChange);
@@ -103,7 +103,7 @@ project_btn.addEventListener('click', () => {
 
 // On code textbox keydown.
 code_txt.addEventListener('keydown', event => {
-	if(event.key === "Enter" && event.ctrlKey) {
+	if (event.key === "Enter" && event.ctrlKey) {
 		try {
 			eval.call(globalThis, editor.getValue());
 			editor.setValue("");
@@ -156,7 +156,7 @@ function addChange(key) {
 
 	// The attribute of coordinates that will be modified.
 	const changes = key === 'sgn' ? coordinates.signChanges : coordinates.permutations;
-	
+
 	// The index of the change of the corresponding type.
 	const idx = changes.length;
 
@@ -168,7 +168,7 @@ function addChange(key) {
 
 	// The radio box labels.
 	const labelTxt = ["All", "Even", "Odd"];
-	if(key === 'sgn')
+	if (key === 'sgn')
 		labelTxt.push("Full");
 
 	// Places the radio boxes and their labels.
@@ -194,7 +194,7 @@ function addChange(key) {
 	div.id = `${key}${idx}-div`;
 	frm.appendChild(div);
 
-	changes.push({type: 0, indices: []});
+	changes.push({ type: 0, indices: [] });
 
 	// Configures the radio buttons.
 	document.getElementById(`${key}${idx}-frm`).radio.forEach((radio, i) => {
@@ -214,7 +214,7 @@ function addChange(key) {
 minussigns_btn.addEventListener('click', () => deleteChange('sgn'));
 minusperms_btn.addEventListener('click', () => deleteChange('prm'));
 
-function deleteChange(key) {	
+function deleteChange(key) {
 	// The fieldset to which the change is removed.
 	const fst = key === 'sgn' ? sign_fst : perm_fst;
 
@@ -226,7 +226,7 @@ function deleteChange(key) {
 
 	// Does the actual removing.
 	changes.pop();
-	fst.removeChild(fst.lastChild);	
+	fst.removeChild(fst.lastChild);
 	minus_btn.disabled = changes.length === 0;
 }
 
@@ -236,14 +236,14 @@ function deleteChange(key) {
  * @param {string} key Either 'sgn' or 'prm', referring to the type of change.
  * @param {string} idx 
  */
-function configCheckboxes(key, idx) {	
+function configCheckboxes(key, idx) {
 	const div = document.getElementById(`${key}${idx}-div`);
 	const len = div.children.length / 2;
 	const dim = coordinates.dimensions;
 	const changes = key === 'sgn' ? coordinates.signChanges[idx] : coordinates.permutations[idx];
 
-	if(dim > len)
-		for(let i = len; i < dim; i++) {
+	if (dim > len)
+		for (let i = len; i < dim; i++) {
 			const chk = document.createElement("input");
 			chk.id = `${key}${idx}-chk${i}`;
 			chk.type = "checkbox";
@@ -264,12 +264,12 @@ function configCheckboxes(key, idx) {
 			changes.indices.push(true);
 		}
 	else
-		for(let i = len; i > dim; i--) {
+		for (let i = len; i > dim; i--) {
 			div.removeChild(div.lastChild);
 			div.removeChild(div.lastChild);
 
 			changes.indices.pop();
-		}	
+		}
 }
 
 undo_btn.addEventListener('click', () => {
@@ -280,12 +280,12 @@ scale_btn.addEventListener('click', () => {
 	try {
 		const scale = eval.call(globalThis, scale_txt.value);
 
-		if(!(isNaN(scale) || scale === 1)) {
+		if (!(isNaN(scale) || scale === 1)) {
 			coordinates.scale(scale);
 			scale_txt.value = '1';
 		}
 	}
-	catch(ex) {
+	catch (ex) {
 		alert(ex);
 	}
 })

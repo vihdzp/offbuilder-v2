@@ -1,6 +1,6 @@
 /**
- * Used to read through a text file like a caret.
- * Stores the text and the position at which it's reading it.
+ * Used to read through a text file like a caret. Stores the text and the
+ * position at which it's reading it.
  */
 export default class Caret {
 	/**
@@ -22,7 +22,7 @@ export default class Caret {
 	skipWhitespace() {
 		let c = this.fileText[this.pos];
 
-		while(isWhitespace(c))
+		while (isWhitespace(c))
 			c = this.fileText[++this.pos];
 	}
 
@@ -37,11 +37,11 @@ export default class Caret {
 		const idx = this.pos;
 
 		// Skips until a whitespace character is found.
-		while(!isWhitespace(this.fileText[++this.pos]));
+		while (!isWhitespace(this.fileText[++this.pos]));
 
-		// Returns the string from the initial position to the current position as a
-		// number.
-		return parseFloat(this.fileText.substr(idx, this.pos - idx));
+		// Returns the string from the initial position to the current position
+		// as a number.
+		return parseFloat(this.fileText.substring(idx, this.pos - idx));
 	}
 }
 

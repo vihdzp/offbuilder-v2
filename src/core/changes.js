@@ -8,7 +8,7 @@ import Parity from "../classes/parity.js";
  * @returns {Point[]} The concatenated output.
  */
 function applyConcat(coord, fun) {
-	return coord[0] instanceof Array 
+	return coord[0] instanceof Array
 		? [].concat(...coord.map(fun))
 		: fun(coord);
 }
@@ -21,7 +21,7 @@ function applyConcat(coord, fun) {
  * applied. Defaults to [0, 1, ..., n - 1].
  * @returns {Point[]} All permutations of each of the points.
  */
-export const allPermutations = function(coord, indices) {
+export const allPermutations = function (coord, indices) {
 	return permutations(coord, indices, new Parity('all'));
 }
 globalThis.allPermutations = allPermutations;
@@ -34,7 +34,7 @@ globalThis.allPermutations = allPermutations;
  * applied. Defaults to [0, 1, ..., n - 1].
  * @returns {Point[]} All even permutations of each of the points.
  */
-export const evenPermutations = function(coord, indices) {
+export const evenPermutations = function (coord, indices) {
 	return permutations(coord, indices, new Parity('even'));
 }
 globalThis.evenPermutations = evenPermutations;
@@ -47,7 +47,7 @@ globalThis.evenPermutations = evenPermutations;
  * applied. Defaults to [0, 1, ..., n - 1].
  * @returns {Point[]} All odd permutations of each of the points.
  */
-export const oddPermutations = function(coord, indices) {
+export const oddPermutations = function (coord, indices) {
 	return permutations(coord, indices, new Parity('odd'));
 }
 globalThis.oddPermutations = oddPermutations;
@@ -63,26 +63,26 @@ globalThis.oddPermutations = oddPermutations;
  * @returns {Point[]} All permutations of the point.
  */
 function permutations(coord, indices, parity) {
-	if(indices.length === 0)
+	if (indices.length === 0)
 		return coord;
-		
+
 	const dim = coord[0] instanceof Array ? coord[0].length : coord.length;
 	indices ||= range(dim);
 
 	// Goes through each permutation in lexicographic order, skipping even/odd
 	// ones if necessary.
-	return applyConcat(coord, function(c) {
+	return applyConcat(coord, function (c) {
 		c = [...c];
 		let _parity = parity.clone();
 
 		// Sorts the sequence in increasing order. Changes the parity
 		// accordingly.
-		if(!sort(c, indices))
+		if (!sort(c, indices))
 			_parity.flip();
 
 		// If any two entries are repeated, even/odd permutations are simply
 		// equal to all permutations.
-		for(let i = 0; i < indices.length - 1; i++)
+		for (let i = 0; i < indices.length - 1; i++)
 			if (c[indices[i]] === c[indices[i + 1]]) {
 				_parity = new Parity('all');
 				break;
@@ -91,22 +91,22 @@ function permutations(coord, indices, parity) {
 		const res = [];
 
 		// While the permutations are being calculated.
-		while(true) {
+		while (true) {
 			// Adds a copy of the current coordinates.
-			if(_parity.check()) 
+			if (_parity.has_even())
 				res.push([...c]);
-			
+
 			// Searches for the last point the sequence strictly increases.
 			let i = indices.length;
-			while(i-- > 0 && c[indices[i - 1]] >= c[indices[i]]);
+			while (i-- > 0 && c[indices[i - 1]] >= c[indices[i]]);
 
 			// Return the complete array if the sequence is now decreasing.
-			if(i === 0)
+			if (i === 0)
 				return res;
 
 			// Finds the next smallest thing larger than c[indices[i - 1]].
 			let j = i;
-			while(c[indices[j]] > c[indices[i - 1]])
+			while (c[indices[j]] > c[indices[i - 1]])
 				j++;
 
 			// Swaps it with c[indices[i - 1]].
@@ -115,7 +115,7 @@ function permutations(coord, indices, parity) {
 
 			// Reverses the entire thing from array[i] onwards.
 			j = indices.length - 1;
-			while(i < j) {
+			while (i < j) {
 				swap(c, indices[i++], indices[j--]);
 				_parity.flip();
 			}
@@ -131,7 +131,7 @@ function permutations(coord, indices, parity) {
  * applied. Defaults to [0, 1, ..., n - 1].
  * @returns {Point[]} All sign changes of each of the points.
  */
-export const allSignChanges = function(coord, indices) {
+export const allSignChanges = function (coord, indices) {
 	return signChanges(coord, indices, new Parity('all'));
 }
 globalThis.allSignChanges = allSignChanges;
@@ -144,7 +144,7 @@ globalThis.allSignChanges = allSignChanges;
  * applied. Defaults to [0, 1, ..., n - 1].
  * @returns {Point[]} All even sign changes of each of the points.
  */
-export const evenSignChanges = function(coord, indices) {
+export const evenSignChanges = function (coord, indices) {
 	return signChanges(coord, indices, new Parity('even'));
 }
 globalThis.evenSignChanges = evenSignChanges;
@@ -157,7 +157,7 @@ globalThis.evenSignChanges = evenSignChanges;
  * applied. Defaults to [0, 1, ..., n - 1].
  * @returns {Point[]} All odd sign changes of each of the points.
  */
-export const oddSignChanges = function(coord, indices) {
+export const oddSignChanges = function (coord, indices) {
 	return signChanges(coord, indices, new Parity('odd'));
 }
 globalThis.oddSignChanges = oddSignChanges;
@@ -171,13 +171,13 @@ globalThis.oddSignChanges = oddSignChanges;
  * applied. Defaults to [0, 1, ..., n - 1].
  * @returns {Point[]} All full sign changes of each of the points.
  */
-export const fullSignChanges = function(coord, indices) {
+export const fullSignChanges = function (coord, indices) {
 	const dim = coord[0] instanceof Array ? coord[0].length : coord.length;
 	indices ||= range(dim);
 
-	return applyConcat(coord, function(coord) {
+	return applyConcat(coord, function (coord) {
 		const flipCoord = [...coord];
-		for(let i = 0; i < indices.length ;i++)
+		for (let i = 0; i < indices.length; i++)
 			flipCoord[indices[i]] *= -1;
 
 		return [coord, flipCoord];
@@ -199,30 +199,30 @@ function signChanges(coord, indices, parity) {
 	const dim = coord[0] instanceof Array ? coord[0].length : coord.length;
 	indices ||= range(dim);
 
-	return applyConcat(coord, function(c) {
+	return applyConcat(coord, function (c) {
 		c = [...c];
 
 		const res = [];
 		const _parity = parity.clone();
 		const newIndices = [];
 
-		for(let i = 0; i < indices.length; i++)
-			if(c[indices[i]] !== 0)
+		for (let i = 0; i < indices.length; i++)
+			if (c[indices[i]] !== 0)
 				newIndices.push(indices[i]);
-				
-		const n = newIndices.length - ((_parity.get() === 'all') ? 0 : 1);
-				
-		for(let i = 1; i <= 2 ** n; i++) {
+
+		const n = newIndices.length - ((_parity.type === 'all') ? 0 : 1);
+
+		for (let i = 1; i <= 2 ** n; i++) {
 			let j = 1, k = 1;
 
-			if(_parity.get() === 'odd') {
+			if (_parity.type === 'odd') {
 				c[newIndices[n]] *= -1;
 				_parity.flip();
 			}
 
 			res.push([...c]);
 
-			while(i % j === 0) {
+			while (i % j === 0) {
 				c[newIndices[n - k]] *= -1;
 				_parity.flip();
 				j *= 2; k++;
@@ -259,9 +259,9 @@ function sort(array, indices) {
 		parity = true;
 
 	//Bubblesort.
-	while(checks-- > 0)
-		for(let i = 0; i < checks; i++)
-			if(array[indices[i]] > array[indices[i + 1]]) {
+	while (checks-- > 0)
+		for (let i = 0; i < checks; i++)
+			if (array[indices[i]] > array[indices[i + 1]]) {
 				swap(array, indices[i], indices[i + 1])
 				parity = !parity;
 			}
@@ -276,5 +276,5 @@ function sort(array, indices) {
  * @returns {number[]} The array [0, 1, ..., n - 1].
  */
 function range(n) {
-	return Array.from({length: n}).map((x, i) => i);
+	return Array.from({ length: n }).map((x, i) => i);
 }

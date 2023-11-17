@@ -30,16 +30,16 @@ const BalanceState = {
  * structure]] for fast insertion and sorting.
  *
  * @license
- * Copyright Daniel Imms <http://www.growingwiththeweb.com>.
- * Modified by the Miratope authors.
- * Released under the MIT license. See LICENSE in the project root for details.
+ * Copyright Daniel Imms <http://www.growingwiththeweb.com>. Modified by the
+ * Miratope authors. Released under the MIT license. See LICENSE in the project
+ * root for details.
  */
 export default class AvlTree {
 	/**
 	 * Class constructor.
 	 *
-	 * @param customCompare An optional custom compare function.
-	 * Overrides [[`compare`]], and has to work analogously.
+	 * @param customCompare An optional custom compare function. Overrides
+	 * [[`compare`]], and has to work analogously.
 	 */
 	constructor(customCompare) {
 		/** The root of the AVL tree. */
@@ -48,14 +48,16 @@ export default class AvlTree {
 		/** The element count of the AVL tree. */
 		this.size = 0;
 
-		/** Temporary variable for [[`insert`]]. Stores the new inserted node. */
+		/** Temporary variable for [[`insert`]]. Stores the new inserted node.
+		 * */
 		this.insertedNode = null;
 
 		if (customCompare) this.compare = customCompare;
 	}
 
 	/**
-	 * The default compare function. Can be overwritten in the [[`constructor`]].
+	 * The default compare function. Can be overwritten in the
+	 * [[`constructor`]].
 	 *
 	 * @param a The first key to compare.
 	 * @param b The second key to compare.
@@ -93,12 +95,13 @@ export default class AvlTree {
 		// Perform regular BST insertion
 		if (!root) return (this.insertedNode = new AvlNode(key));
 
-		if (this.compare(key, root.key) < 0) 
+		if (this.compare(key, root.key) < 0)
 			root.linkLeft(this._insert(key, root.left));
 		else if (this.compare(key, root.key) > 0)
 			root.linkRight(this._insert(key, root.right));
 		else {
-			// It's a duplicate so insertion failed, decrement size to make up for it
+			// It's a duplicate so insertion failed, decrement size to make up
+			// for it
 			this.size--;
 			return root;
 		}
@@ -120,7 +123,8 @@ export default class AvlTree {
 		}
 
 		if (balanceState === BalanceState.UNBALANCED_RIGHT && root.right) {
-			// If the node is unbalanced to the right, it must have a right node.
+			// If the node is unbalanced to the right, it must have a right
+			// node.
 			if (this.compare(key, root.right.key) > 0) {
 				// Right right case
 				root = root.rotateLeft();
@@ -233,12 +237,12 @@ export default class AvlTree {
 		const balanceState = AvlTree.getBalanceState(root);
 
 		if (balanceState === BalanceState.UNBALANCED_LEFT && root.left) {
-			// Left left case
-			// If the node is unbalanced to the left, it must have a left node.
+			// Left left case If the node is unbalanced to the left, it must
+			// have a left node.
 			if (
 				AvlTree.getBalanceState(root.left) === BalanceState.BALANCED ||
 				AvlTree.getBalanceState(root.left) ===
-					BalanceState.SLIGHTLY_UNBALANCED_LEFT
+				BalanceState.SLIGHTLY_UNBALANCED_LEFT
 			) {
 				return root.rotateRight();
 			}
@@ -254,12 +258,12 @@ export default class AvlTree {
 		}
 
 		if (balanceState === BalanceState.UNBALANCED_RIGHT && root.right) {
-			// Right right case
-			// If the node is unbalanced to the right, it must have a right node.
+			// Right right case If the node is unbalanced to the right, it must
+			// have a right node.
 			if (
 				AvlTree.getBalanceState(root.right) === BalanceState.BALANCED ||
 				AvlTree.getBalanceState(root.right) ===
-					BalanceState.SLIGHTLY_UNBALANCED_RIGHT
+				BalanceState.SLIGHTLY_UNBALANCED_RIGHT
 			) {
 				return root.rotateLeft();
 			}
@@ -385,9 +389,8 @@ export default class AvlTree {
 	}
 
 	/**
-	 * Checks whether the AVL tree is sorted.
-	 * If the code worked correctly, it would always return `true`.
-	 * Debug function, will be deleted.
+	 * Checks whether the AVL tree is sorted. If the code worked correctly, it
+	 * would always return `true`. Debug function, will be deleted.
 	 *
 	 * @internal
 	 * @returns Whether the tree is sorted or not.
@@ -443,19 +446,19 @@ class AvlNode {
 		/** The height of the node in the tree. */
 		this.height = 0;
 
-		/** The node's identifier, used both to store a value and to compare it with
-		 * others. */
+		/** The node's identifier, used both to store a value and to compare it
+		 * with others. */
 		this.key = key;
 	}
 
 	/**
 	 * Performs a right rotate on this node.
 	 *```Markdown
-	 *				b													 a
-	 *			 / \												 / \
-	 *			a	 e -> b.rotateRight() -> c	 b
-	 *		 / \														 / \
-	 *		c	 d													 d	 e
+	 *     b                           a
+	 *    / \                         / \
+	 *   a   e -> b.rotateRight() -> c   b
+	 *  / \                             / \
+	 * c   d                           d   e
 	 *```
 	 *
 	 * @returns The root of the sub-tree, the node where this node used to be.
@@ -472,15 +475,14 @@ class AvlNode {
 	/**
 	 * Performs a left rotate on this node.
 	 *```Markdown
-	 *			a													 b
-	 *		 / \												 / \
-	 *		c	 b	-> a.rotateLeft() -> a	 e
-	 *			 / \												 / \
-	 *			d	 e											 c	 d
+	 *   a                          b
+	 *  / \                        / \
+	 * c   b -> a.rotateLeft() -> a   e
+	 *    / \                        / \
+	 *   d   e                      c   d
 	 *```
 	 *
-	 * @returns The root of the sub-tree, the node where this node used
-	 * to be.
+	 * @returns The root of the sub-tree, the node where this node used to be.
 	 */
 	rotateLeft() {
 		const other = this.right;

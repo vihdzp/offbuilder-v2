@@ -14,15 +14,15 @@ import SVD from '../svd/svd.js';
  */
 function elementNames(n) {
 	const names = [
-		"Vertices", 
-		"Edges", 
-		"Faces", 
+		"Vertices",
+		"Edges",
+		"Faces",
 		"Cells",
-		"Tera", 
-		"Peta", 
+		"Tera",
+		"Peta",
 		"Exa",
 		"Zetta",
-		"Yotta" 
+		"Yotta"
 	];
 
 	return names[n] || n + '-element';
@@ -32,7 +32,7 @@ function elementNames(n) {
  * Saves the coordinates currently on the coordinate list into a text file that
  * can be loaded into Qhull.
  */
-export const exportCoordinates = function() {
+export const exportCoordinates = function () {
 	const newline = coordinates.options.newline;
 
 	// Writes the number of dimensions.
@@ -56,7 +56,7 @@ export const exportCoordinates = function() {
  * 
  * @param {Event} event The event triggered by opening the file.
  */
-export const importCoordinates = function(event) {
+export const importCoordinates = function (event) {
 	// Loads header info, declares some variables.
 	const newline = coordinates.options.newline,
 		caret = new Caret(event.target.result),
@@ -71,30 +71,30 @@ export const importCoordinates = function(event) {
 	// Reads the output file, gets the elements.
 
 	// Reads vertices.
-	for(let i = 0; i < vertexCount; i++) {
+	for (let i = 0; i < vertexCount; i++) {
 		vertices.push([]);
 
-		for(let j = 0; j < dim; j++)
+		for (let j = 0; j < dim; j++)
 			vertices[i].push(caret.readNumber());
 	}
 
 	// Reads facets.
-	for(let i = 0; i < facetCount; i++) {
+	for (let i = 0; i < facetCount; i++) {
 		// Reads vertex indices.
 		const elCount = caret.readNumber(),
 			facet = [];
-		
-		for(let j = 0; j < elCount; j++)	
+
+		for (let j = 0; j < elCount; j++)
 			facet.push(caret.readNumber());
 
 		// Adds facet to elementList.
-		elementList[dim - 1].push(facet.sort((a, b) => {return a - b;}));
+		elementList[dim - 1].push(facet.sort((a, b) => { return a - b; }));
 	}
 
 	// Generates (d - 1)-elements out of d-elements.
 	// At the same time, rewrites d-elements in terms of them.
 
-	for(let d = dim - 1; d >= 2; d--) {
+	for (let d = dim - 1; d >= 2; d--) {
 		// Initializes newElements.
 		const dElements = elementList[d],
 			dm1Elements = new AvlTree(faceCompare),
@@ -107,19 +107,19 @@ export const importCoordinates = function(event) {
 		// Debug stuff.
 		let time = Date.now(),
 			iter = 0;
-		
+
 		const total = len * (len - 1) / 200;
 
 		// Two d-dimensional elements have a common face iff they have at least
 		// d common vertices and are not contained in (d - 2)-dimensional space.
-		for(let i = 0; i < len; i++) {
+		for (let i = 0; i < len; i++) {
 			// For very long calculations, logs progress every 5s.
-			if(Date.now() - time > 5000) {
+			if (Date.now() - time > 5000) {
 				console.log(`Dimension: ${d}. Progress: ${iter / total}%.`);
 				time = Date.now();
 			}
-		
-			for(let j = i + 1; j < len; j++) {
+
+			for (let j = i + 1; j < len; j++) {
 				iter++;
 
 				// The indices of the common points between the two arrays.
@@ -131,7 +131,7 @@ export const importCoordinates = function(event) {
 				// It is possible for two d-elements to share more than d 
 				// elements without them being a common (d - 1)-elements, but 
 				// only when d >= 4.
-				if(commonElements.length >= d && (d >= 4 || 
+				if (commonElements.length >= d && (d >= 4 ||
 					dimension(
 						commonElements.map(x => [...vertices[x]])
 					) === d - 1
@@ -144,7 +144,7 @@ export const importCoordinates = function(event) {
 
 					// If not, adds the element to the element list and the 
 					// corresponding parent elements.
-					if(duplicate === null) {
+					if (duplicate === null) {
 						const idx = dm1Elements.size;
 						commonElements.index = idx;
 
@@ -158,10 +158,10 @@ export const importCoordinates = function(event) {
 					else {
 						const idx = duplicate.key.index;
 
-						if(newEl1.indexOf(idx) === -1)
+						if (newEl1.indexOf(idx) === -1)
 							newEl1.push(idx);
 
-						if(newEl2.indexOf(idx) === -1)
+						if (newEl2.indexOf(idx) === -1)
 							newEl2.push(idx);
 					}
 				}
@@ -173,7 +173,7 @@ export const importCoordinates = function(event) {
 		// in the correct position in a new array.
 		const sortdm1Elements = new Array(dm1Elements.size);
 		let node = dm1Elements.findMinimumNode();
-		while(node) {
+		while (node) {
 			const key = node.key;
 
 			sortdm1Elements[key.index] = key;
@@ -186,7 +186,7 @@ export const importCoordinates = function(event) {
 	}
 
 	// Quick sanity test.
-	if(elementList[dim - 2].length != ridgeCount)
+	if (elementList[dim - 2].length != ridgeCount)
 		alert("WARNING: Ridge count does not match expected value!");
 
 	const edges = elementList[1],
@@ -194,21 +194,21 @@ export const importCoordinates = function(event) {
 
 	// Faces are currently in terms of their edges.
 	// We convert them to an ordered vertex representation.
-	for(let f = 0; f < faces.length; f++) {
+	for (let f = 0; f < faces.length; f++) {
 		const face = faces[f],
 			linkedList = [];
-			
+
 		// We build a linked list with all of the edges of the face.
-		for(let i = 0; i < face.length; i++) {
+		for (let i = 0; i < face.length; i++) {
 			const edge = edges[face[i]];
 
-			for(let j = 0; j <= 1; j++) {
+			for (let j = 0; j <= 1; j++) {
 				const vertex = edge[j];
 
-				if(!linkedList[vertex])
+				if (!linkedList[vertex])
 					linkedList[vertex] = new LinkedListNode(vertex);
 			}
-			
+
 			linkedList[edge[0]].linkTo(linkedList[edge[1]]);
 		}
 
@@ -220,50 +220,50 @@ export const importCoordinates = function(event) {
 
 	// nOFF
 	let txt = '';
-	if(dim != 3)
+	if (dim != 3)
 		txt += dim;
 	txt += 'OFF' + newline;
 
 	// # Vertices, Faces, Edges, ...
 	txt += '# ' + elementNames(0);
-	if(dim >= 3)
+	if (dim >= 3)
 		txt += ', ' + elementNames(2);
-	if(dim >= 2)
+	if (dim >= 2)
 		txt += ', ' + elementNames(1);
-	for(let i = 3; i < dim; i++)
+	for (let i = 3; i < dim; i++)
 		txt += ', ' + elementNames(i);
 	txt += newline;
 
 	// The corresponding numbers.
 	txt += vertices.length;
-	if(dim >= 3)
+	if (dim >= 3)
 		txt += ' ' + faces.length;
-	if(dim >= 2)
+	if (dim >= 2)
 		txt += ' ' + edges.length;
-	for(let i = 3; i < dim; i++)
+	for (let i = 3; i < dim; i++)
 		txt += ' ' + elementList[i].length;
 	txt += newline + newline;
 
 	// Vertices.
 	txt += '# ' + elementNames(0) + newline;
-	for(let i = 0; i < vertices.length; i++) {
+	for (let i = 0; i < vertices.length; i++) {
 		const vertex = vertices[i];
 		txt += vertex[0];
 
-		for(let j = 1; j < dim; j++)
+		for (let j = 1; j < dim; j++)
 			txt += ' ' + vertex[j];
 		txt += newline;
 	}
 
 	// The rest of the elements.
-	for(let d = 2; d < dim; d++) {
+	for (let d = 2; d < dim; d++) {
 		txt += newline + '# ' + elementNames(d) + newline;
-		for(let i = 0; i < elementList[d].length; i++) {
+		for (let i = 0; i < elementList[d].length; i++) {
 			const el = elementList[d][i];
 			let len = el.length;
 			txt += len;
 
-			for(let j = 0; j < len; j++)
+			for (let j = 0; j < len; j++)
 				txt += ' ' + el[j];
 			txt += newline;
 		}
@@ -288,32 +288,32 @@ function dimension(matrix) {
 
 	// Removes and stores the last row of the matrix.
 	const lastRow = matrix.pop();
-	
+
 	// The dimensions of the matrix.
-	const m = matrix.length, 
+	const m = matrix.length,
 		n = matrix[0].length;
 
 	// Offsets every other row in the matrix by the removed one.
-	for(let i = 0; i < m; i++)
-		for(let j = 0; j < n; j++)
-			matrix[i][j] -= lastRow[j];	
+	for (let i = 0; i < m; i++)
+		for (let j = 0; j < n; j++)
+			matrix[i][j] -= lastRow[j];
 
 	// If the matrix is wider than it is tall, it transposes it so that the SVD
 	// algorithm can process it.
-	if(m < n) {
+	if (m < n) {
 		const newMatrix = new Array(n).fill(0).map(() => new Array(m));
 
-		for(let i = 0; i < m; i++)
-			for(let j = 0; j < n; j++)
+		for (let i = 0; i < m; i++)
+			for (let j = 0; j < n; j++)
 				newMatrix[j][i] = matrix[i][j];
-		
+
 		matrix = newMatrix;
 	}
 
 	// The rank is the amount of singular values that are either NaN or less 
 	// than epsilon.
 	let rank = 0;
-	SVD(matrix).q.forEach((x) => {if(!(x <= EPS)) rank++;});
+	SVD(matrix).q.forEach((x) => { if (!(x <= EPS)) rank++; });
 	return rank;
 }
 
@@ -325,9 +325,9 @@ function dimension(matrix) {
  * @param {string} mimeType The MIME type of the file.
  */
 function saveFile(txt, fileName, mimeType) {
-	const blob = new Blob([txt], {type: mimeType});
+	const blob = new Blob([txt], { type: mimeType });
 
-	if(window.navigator.msSaveOrOpenBlob)
+	if (window.navigator.msSaveOrOpenBlob)
 		window.navigator.msSaveOrOpenBlob(blob, filename);
 	else {
 		dl_a.href = window.URL.createObjectURL(blob);
@@ -346,15 +346,15 @@ function saveFile(txt, fileName, mimeType) {
  */
 function common(el1, el2) {
 	const common = [],
-		len1 = el1.length, 
+		len1 = el1.length,
 		len2 = el2.length;
 
 	let m = 0, n = 0;
 
-	while(m < len1 && n < len2) {
-		if(el1[m] < el2[n])
+	while (m < len1 && n < len2) {
+		if (el1[m] < el2[n])
 			m++;
-		else if(el1[m] > el2[n])
+		else if (el1[m] > el2[n])
 			n++;
 		else
 			common.push(el1[m++]);
@@ -373,9 +373,9 @@ function common(el1, el2) {
  */
 function faceCompare(el1, el2) {
 	const len = Math.min(el1.length, el2.length);
-	for(let i = 0; i < len; i++)
-		if(el1[i] !== el2[i])
+	for (let i = 0; i < len; i++)
+		if (el1[i] !== el2[i])
 			return el1[i] - el2[i];
 
-	return el1.length - el2.length;		
+	return el1.length - el2.length;
 }
