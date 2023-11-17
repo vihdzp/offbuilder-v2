@@ -41,7 +41,7 @@ export default class Caret {
 
 		// Returns the string from the initial position to the current position
 		// as a number.
-		return parseFloat(this.fileText.substring(idx, this.pos - idx));
+		return parseFloat(this.fileText.substring(idx, this.pos));
 	}
 }
 
