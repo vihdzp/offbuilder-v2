@@ -1,16 +1,16 @@
 # What is OFFBuilder?
-[OFFBuilder](https://vihdzp.github.io/offbuilder-v2/) generates OFF files for convex polytopes from their coordinates. It\'s meant for use with [Stella](https://www.software3d.com/Stella.php) and [Miratope](https://github.com/OfficialURL/miratope). Runs (mostly) in the browser.
+[OFFBuilder](https://vihdzp.github.io/offbuilder-v2/) generates OFF files for convex polytopes from their coordinates. It\'s meant for use with [Stella](https://www.software3d.com/Stella.php) and [Miratope](https://github.com/vihdzp/miratope). Runs (mostly) in the browser.
 
-For a quick explanation of what an OFF file is, see the [Miratope readme](https://github.com/OfficialURL/miratope#where-do-i-get-these-off-files).
+For a quick explanation of what an OFF file is, see the [Miratope readme](https://github.com/vihdzp/miratope#where-do-i-get-these-off-files).
 
-OFFBuilder v.2 is a rework of the original [OFFBuilder v.1](https://github.com/OfficialURL/OFFBuilder). It\'s meant to be compatible with all platforms and to be more extensible than the original software.
+OFFBuilder v.2 is a rework of the original [OFFBuilder v.1](https://github.com/vihdzp/OFFBuilder). It\'s meant to be compatible with all platforms and to be more extensible than the original software.
 
 Eventually, OFFBuilder will become a feature of Miratope itself.
 
 ## How to use?
 To generate an OFF file, you'll have to follow a simple step-by-step process. Steps 1–2 only need to be ran once.
 
-1. Open OFFBuilder from its [website](https://officialurl.github.io/offbuilder-v2/).
+1. Open OFFBuilder from its [website](https://vihdzp.github.io/offbuilder-v2/).
 2. Download [Qhull](http://www.qhull.org/), extract the ZIP file, and copy `qconvex` into its own separate folder. Let\'s call it `offbuilder`.
 3. Write the coordinates of the polytope into the **Coordinates** field. You can either add a single point, or add the point along with sign changes and permutations of some of its coordinates. Alternatively, you can use the API to add coordinates programmatically: see below.
 4. When you\'re done adding the coordinates, click on the Export button. Save the file as `polytope_input.txt` on the same folder you placed `qconvex`. 
