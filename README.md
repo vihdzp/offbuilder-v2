@@ -3,8 +3,6 @@
 
 OFFBuilder v.2 is a rework of the original [OFFBuilder v.1](https://github.com/vihdzp/OFFBuilder). It\'s meant to be compatible with all platforms and to be more extensible than the original software.
 
-Eventually, OFFBuilder will become a feature of Miratope itself.
-
 ## How to use?
 To generate an OFF file, you'll have to follow a simple step-by-step process. Steps 1–2 only need to be ran once.
 
